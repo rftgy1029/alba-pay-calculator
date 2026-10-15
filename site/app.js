@@ -3,6 +3,7 @@
 import {
   DEDUCTIONS,
   YEARS,
+  autoDeduction,
   calculatePay,
   defaultYear,
   formatHours,
@@ -52,8 +53,17 @@ form.addEventListener('input', (event) => {
     state.fiveOrMoreEmployees = target.checked;
   } else if (target.name === 'deduction') {
     state.deduction = target.value;
+    state.deductionAuto = false;
   }
 
+  if (state.deductionAuto) applyAutoDeduction();
+  syncUrl();
+  render();
+});
+
+$('deduction-auto').addEventListener('click', () => {
+  state.deductionAuto = true;
+  applyAutoDeduction();
   syncUrl();
   render();
 });
@@ -72,16 +82,26 @@ function readStateFromUrl() {
   const year = YEARS[params.get('y')] ? Number(params.get('y')) : defaultYear();
   const wage = Number(params.get('w'));
   const days = Number(params.get('d'));
+  // 공제를 직접 고른 링크(x=...)가 아니면 근무시간에 맞춰 자동으로 고른다.
+  const deductionAuto = !Object.hasOwn(DEDUCTIONS, params.get('x'));
 
-  return {
+  const state = {
     year,
     hourlyWage: Number.isInteger(wage) && wage > 0 && wage < 1e7 ? wage : YEARS[year].minimumWage,
     hoursPerDay: params.has('h') ? parseHours(params.get('h')) : 8,
     nightHoursPerDay: params.has('n') ? parseHours(params.get('n')) : 0,
     daysPerWeek: Number.isInteger(days) && days >= 1 && days <= 7 ? days : 5,
     fiveOrMoreEmployees: params.get('f') !== '0',
-    deduction: Object.hasOwn(DEDUCTIONS, params.get('x')) ? params.get('x') : 'none',
+    deduction: deductionAuto ? 'none' : params.get('x'),
+    deductionAuto,
   };
+  if (deductionAuto) state.deduction = autoDeduction(state);
+  return state;
+}
+
+function applyAutoDeduction() {
+  state.deduction = autoDeduction(state);
+  form.querySelector(`input[name="deduction"][value="${state.deduction}"]`).checked = true;
 }
 
 function writeStateToForm() {
@@ -103,8 +123,9 @@ function syncUrl() {
     n: formatHours(state.nightHoursPerDay),
     d: state.daysPerWeek,
     f: state.fiveOrMoreEmployees ? '1' : '0',
-    x: state.deduction,
   });
+  // 직접 고른 공제만 주소에 남긴다. 자동이면 링크를 연 사람의 근무시간에 맞춰 다시 고른다.
+  if (!state.deductionAuto) params.set('x', state.deduction);
   history.replaceState(null, '', `${location.pathname}?${params}`);
 }
 
@@ -114,6 +135,16 @@ function render() {
   const hasDeduction = state.deduction !== 'none';
 
   $('year-hint').textContent = `${state.year}년 최저시급 ${formatWon(rates.minimumWage)}`;
+
+  if (state.deductionAuto) {
+    $('deduction-hint').textContent =
+      state.deduction === 'insurance4'
+        ? `월 ${result.monthlyContractHours}시간 근무라 4대보험 가입 대상이에요. 근무시간에 맞춰 자동으로 골랐어요.`
+        : `월 ${result.monthlyContractHours}시간 근무라 4대보험 가입 대상이 아닐 수 있어서 공제 없음으로 골랐어요.`;
+  } else {
+    $('deduction-hint').textContent = '직접 고른 공제예요.';
+  }
+  $('deduction-auto').hidden = state.deductionAuto;
 
   $('result-label').textContent = hasDeduction ? '예상 월 실수령액' : '예상 월급 (세전)';
   $('result-amount').textContent = formatWon(hasDeduction ? result.monthlyNet : result.monthly.gross);

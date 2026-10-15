@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { calculatePay, defaultYear, formatWon } from './calc.js';
+import { autoDeduction, calculatePay, defaultYear, formatWon } from './calc.js';
 
 const fullTime = { hourlyWage: 10320, hoursPerDay: 8, daysPerWeek: 5 };
 
@@ -105,6 +105,15 @@ test('기본 연도는 오늘 날짜를 따르고, 표 밖이면 가까운 연�
   assert.equal(defaultYear(new Date(2027, 0, 1)), 2027);
   assert.equal(defaultYear(new Date(2030, 5, 1)), 2027);
   assert.equal(defaultYear(new Date(2020, 5, 1)), 2026);
+});
+
+test('기본 공제: 월 60시간 이상이면 4대보험, 미만이면 공제 없음', () => {
+  assert.equal(autoDeduction({ hoursPerDay: 8, daysPerWeek: 5 }), 'insurance4'); // 월 174시간
+  assert.equal(autoDeduction({ hoursPerDay: 4, daysPerWeek: 3 }), 'none'); // 월 52시간
+  assert.equal(autoDeduction({ hoursPerDay: 3.5, daysPerWeek: 4 }), 'insurance4'); // 주 14시간 → 월 61시간
+  assert.equal(autoDeduction({ hoursPerDay: 3, daysPerWeek: 4 }), 'none'); // 주 12시간 → 월 52시간
+  // 연장근로는 소정근로시간에 넣지 않는다: 하루 12시간 × 1일 → 소정 8시간 → 월 35시간
+  assert.equal(autoDeduction({ hoursPerDay: 12, daysPerWeek: 1 }), 'none');
 });
 
 test('금액 표시', () => {

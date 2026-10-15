@@ -32,6 +32,17 @@ enum Deduction {
   final String label;
 }
 
+/// 근무시간으로 정하는 기본 공제 (site/calc.js의 autoDeduction과 같은 규칙).
+/// 월 소정근로시간이 60시간 이상이면 4대보험, 아니면 공제 없음.
+/// 3.3%는 프리랜서(사업소득)용이라 근로자인 알바에 맞지 않아 자동으로 고르지 않는다.
+Deduction autoDeduction({required double hoursPerDay, required int daysPerWeek}) {
+  final monthlyHours =
+      _toMonthlyHours(_weeklyContractHours(hoursPerDay, daysPerWeek));
+  return monthlyHours >= insuranceMinMonthlyHours
+      ? Deduction.insurance4
+      : Deduction.none;
+}
+
 class PayInput {
   const PayInput({
     required this.hourlyWage,
@@ -114,9 +125,7 @@ PayResult calculatePay(PayInput input) {
 
   final weeklyWorkHours = hoursPerDay * days;
 
-  // 소정근로시간: 하루 8시간, 주 40시간을 넘는 부분은 연장근로로 본다.
-  final weeklyContractHours =
-      (_min(hoursPerDay, 8) * days).clamp(0, 40).toDouble();
+  final weeklyContractHours = _weeklyContractHours(hoursPerDay, days);
 
   final hasWeeklyHolidayPay = weeklyContractHours >= weeklyHolidayMinHours;
   final weeklyHolidayHours =
@@ -172,6 +181,10 @@ List<DeductionItem> _deductions(Deduction deduction, int monthlyGross) {
       ];
   }
 }
+
+/// 소정근로시간: 하루 8시간, 주 40시간을 넘는 부분은 연장근로로 본다.
+double _weeklyContractHours(double hoursPerDay, int daysPerWeek) =>
+    (_min(hoursPerDay, 8) * daysPerWeek).clamp(0, 40).toDouble();
 
 int _toMonthlyHours(double weeklyHours) => (weeklyHours * weeksPerMonth).round();
 

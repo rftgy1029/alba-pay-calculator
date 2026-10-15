@@ -39,6 +39,16 @@ export const DEDUCTIONS = {
   insurance4: '4대보험',
 };
 
+/**
+ * 근무시간으로 정하는 기본 공제.
+ * 월 소정근로시간이 60시간 이상이면 4대보험 가입 대상이라 4대보험, 아니면 공제 없음.
+ * 3.3%는 프리랜서(사업소득)용이라 근로자인 알바에 맞지 않아 자동으로 고르지 않는다.
+ */
+export function autoDeduction({ hoursPerDay, daysPerWeek }) {
+  const monthlyHours = toMonthlyHours(weeklyContractHoursOf(hoursPerDay, daysPerWeek));
+  return monthlyHours >= INSURANCE_MIN_MONTHLY_HOURS ? 'insurance4' : 'none';
+}
+
 /** 오늘 날짜에 맞는 연도. 표에 없는 연도면 가장 가까운 연도를 쓴다. */
 export function defaultYear(today = new Date()) {
   const years = Object.keys(YEARS).map(Number);
@@ -62,8 +72,7 @@ export function calculatePay({
 
   const weeklyWorkHours = hoursPerDay * days;
 
-  // 소정근로시간: 하루 8시간, 주 40시간을 넘는 부분은 연장근로로 본다.
-  const weeklyContractHours = clamp(Math.min(hoursPerDay, 8) * days, 0, 40);
+  const weeklyContractHours = weeklyContractHoursOf(hoursPerDay, days);
 
   const hasWeeklyHolidayPay = weeklyContractHours >= WEEKLY_HOLIDAY_MIN_HOURS;
   const weeklyHolidayHours = hasWeeklyHolidayPay ? (weeklyContractHours / 40) * 8 : 0;
@@ -132,6 +141,11 @@ function withGross(items) {
     ...items,
     gross: items.basePay + items.weeklyHolidayPay + items.overtimePay + items.nightPay,
   };
+}
+
+/** 소정근로시간: 하루 8시간, 주 40시간을 넘는 부분은 연장근로로 본다. */
+function weeklyContractHoursOf(hoursPerDay, daysPerWeek) {
+  return clamp(Math.min(hoursPerDay, 8) * daysPerWeek, 0, 40);
 }
 
 const toMonthlyHours = (weeklyHours) => Math.round(weeklyHours * WEEKS_PER_MONTH);

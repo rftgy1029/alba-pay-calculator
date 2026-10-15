@@ -156,6 +156,10 @@
           <label><input type="radio" name="deduction" value="freelance33"><span>3.3%</span></label>
           <label><input type="radio" name="deduction" value="insurance4"><span>4대보험</span></label>
         </div>
+        <p class="hint">
+          <span id="deduction-hint"></span>
+          <button type="button" id="deduction-auto" class="link-button" hidden>근무시간에 맞춰 자동 선택</button>
+        </p>
       </fieldset>
     </form>
 
@@ -208,6 +212,7 @@
 
       <h3>6. 공제: 3.3%와 4대보험</h3>
       <p>3.3%는 소득세 3%와 지방소득세 0.3%를 떼는 방식이에요. 4대보험은 국민연금, 건강보험, 장기요양보험, 고용보험을 떼는 방식이고, 월 소정근로시간이 60시간 미만이면 가입 대상이 아닐 수 있어요.</p>
+      <p>계산기는 근무시간을 보고 월 60시간 이상이면 4대보험, 미만이면 공제 없음을 먼저 골라 줘요. 3.3%는 원래 프리랜서(사업소득)에 쓰는 방식이라 자동으로 고르지 않아요. 급여명세서에서 3.3%를 떼고 있다면 직접 바꿔 주세요.</p>
 
       <h2>연도별 최저임금</h2>
       <table class="wage-table">

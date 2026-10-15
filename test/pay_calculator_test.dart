@@ -87,6 +87,14 @@ void main() {
     expect(result.monthlyNet, 2156880 - 71170);
   });
 
+  test('기본 공제: 월 60시간 이상이면 4대보험, 미만이면 공제 없음', () {
+    expect(autoDeduction(hoursPerDay: 8, daysPerWeek: 5), Deduction.insurance4);
+    expect(autoDeduction(hoursPerDay: 4, daysPerWeek: 3), Deduction.none);
+    expect(autoDeduction(hoursPerDay: 3.5, daysPerWeek: 4), Deduction.insurance4);
+    expect(autoDeduction(hoursPerDay: 3, daysPerWeek: 4), Deduction.none);
+    expect(autoDeduction(hoursPerDay: 12, daysPerWeek: 1), Deduction.none);
+  });
+
   test('4대보험 공제', () {
     final result = calculatePay(const PayInput(
       hourlyWage: minimumWage2026,
