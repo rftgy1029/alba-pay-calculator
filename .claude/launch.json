@@ -4,7 +4,13 @@
     {
       "name": "alba-web",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8787", "--directory", "build/web"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8787",
+        "--directory",
+        "site"
+      ],
       "port": 8787
     }
   ]
