@@ -245,14 +245,38 @@ legend {
   cursor: pointer;
 }
 
+/* 선택 표시(thumb)가 고른 칸으로 미끄러져 간다. --count는 칸 수, --index는 고른 칸 순서. */
 .segmented {
+  --index: 0;
+  position: relative;
   display: flex;
-  overflow: hidden;
+  padding: 3px;
   border: 1px solid var(--control-border);
   border-radius: 999px;
 }
 
+.segmented:has(> label:nth-of-type(2) > input:checked) {
+  --index: 1;
+}
+
+.segmented:has(> label:nth-of-type(3) > input:checked) {
+  --index: 2;
+}
+
+.segmented-thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--count));
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  transform: translateX(calc(var(--index) * 100%));
+}
+
 .segmented label {
+  position: relative;
   flex: 1;
 }
 
@@ -263,20 +287,16 @@ legend {
   pointer-events: none;
 }
 
-.segmented span {
+.segmented label span {
   display: block;
-  padding: 10px 4px;
+  padding: 7px 4px;
+  border-radius: 999px;
   font-size: 0.95rem;
   text-align: center;
   cursor: pointer;
 }
 
-.segmented label + label span {
-  border-left: 1px solid var(--control-border);
-}
-
 .segmented input:checked + span {
-  background: var(--accent-soft);
   color: var(--accent-strong);
   font-weight: 700;
 }
@@ -334,7 +354,6 @@ legend {
   border-radius: 999px;
   background: var(--control-border);
   cursor: pointer;
-  transition: background 0.2s;
   appearance: none;
   -webkit-appearance: none;
 }
@@ -348,7 +367,6 @@ legend {
   border-radius: 50%;
   background: #ffffff;
   content: "";
-  transition: transform 0.2s;
 }
 
 .switch-row input:checked {
@@ -359,6 +377,32 @@ legend {
 .switch-row input:checked::after {
   background: var(--on-accent);
   transform: translateX(20px);
+}
+
+/* 애니메이션은 첫 화면을 그린 뒤(js-ready)부터 켠다. 저장된 선택이 처음부터 미끄러지지 않게. */
+.js-ready .segmented-thumb {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.js-ready .segmented label span {
+  transition: color 0.2s;
+}
+
+.js-ready .switch-row input {
+  transition: background 0.2s;
+}
+
+.js-ready .switch-row input::after {
+  transition: transform 0.2s, background 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-ready .segmented-thumb,
+  .js-ready .segmented label span,
+  .js-ready .switch-row input,
+  .js-ready .switch-row input::after {
+    transition: none;
+  }
 }
 
 .switch-row input:focus-visible {

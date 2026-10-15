@@ -93,7 +93,8 @@
     <form id="calc" class="card" autocomplete="off">
       <fieldset class="field">
         <legend>기준 연도</legend>
-        <div class="segmented">
+        <div class="segmented" style="--count: 2">
+          <span class="segmented-thumb" aria-hidden="true"></span>
           <label><input type="radio" name="year" value="2026"><span>2026년</span></label>
           <label><input type="radio" name="year" value="2027"><span>2027년</span></label>
         </div>
@@ -149,7 +150,8 @@
 
       <fieldset class="field field-last">
         <legend>공제</legend>
-        <div class="segmented">
+        <div class="segmented" style="--count: 3">
+          <span class="segmented-thumb" aria-hidden="true"></span>
           <label><input type="radio" name="deduction" value="none"><span>없음</span></label>
           <label><input type="radio" name="deduction" value="freelance33"><span>3.3%</span></label>
           <label><input type="radio" name="deduction" value="insurance4"><span>4대보험</span></label>

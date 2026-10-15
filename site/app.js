@@ -20,6 +20,10 @@ let lastValid = { wage: '', hours: '', night: '' };
 writeStateToForm();
 render();
 
+// 저장된 선택을 먼저 그린 다음 애니메이션을 켠다 (처음 열 때 선택 표시가 미끄러지지 않도록).
+void form.offsetWidth;
+document.body.classList.add('js-ready');
+
 form.addEventListener('submit', (event) => event.preventDefault());
 
 form.addEventListener('input', (event) => {
