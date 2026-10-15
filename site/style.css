@@ -4,6 +4,7 @@
   --text: #19201d;
   --muted: #5b6662;
   --border: #d4dcd8;
+  --control-border: #828c88; /* 카드 대비 3.47:1 */
   --accent: #2e7d6b;
   --accent-strong: #1d5a4c;
   --accent-soft: #e2f1ec;
@@ -21,6 +22,7 @@
     --text: #e5ebe8;
     --muted: #9aa6a1;
     --border: #2b3431;
+    --control-border: #646e6a; /* 카드 대비 3.24:1 */
     --accent: #6fcfb6;
     --accent-strong: #93dfcb;
     --accent-soft: #1b322c;
@@ -38,6 +40,7 @@
   --text: #e5ebe8;
   --muted: #9aa6a1;
   --border: #2b3431;
+  --control-border: #646e6a;
   --accent: #6fcfb6;
   --accent-strong: #93dfcb;
   --accent-soft: #1b322c;
@@ -79,14 +82,14 @@ body {
   gap: 12px;
 }
 
-/* 지금 테마의 반대쪽(바꿀 테마)을 보여 준다. */
+/* 지금 테마 이름을 보여 준다. 누르면 반대 테마로 바뀐다. */
 .theme-toggle {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   margin-top: 4px;
   padding: 6px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: 999px;
   background: var(--surface);
   color: var(--text);
@@ -120,28 +123,28 @@ body {
   stroke-linejoin: round;
 }
 
-.theme-toggle .to-dark {
+.theme-toggle .when-light {
   display: inline-flex;
 }
 
-.theme-toggle .to-light {
+.theme-toggle .when-dark {
   display: none;
 }
 
-:root[data-theme="dark"] .theme-toggle .to-dark {
+:root[data-theme="dark"] .theme-toggle .when-light {
   display: none;
 }
 
-:root[data-theme="dark"] .theme-toggle .to-light {
+:root[data-theme="dark"] .theme-toggle .when-dark {
   display: inline-flex;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-toggle .to-dark {
+  :root:not([data-theme="light"]) .theme-toggle .when-light {
     display: none;
   }
 
-  :root:not([data-theme="light"]) .theme-toggle .to-light {
+  :root:not([data-theme="light"]) .theme-toggle .when-dark {
     display: inline-flex;
   }
 }
@@ -202,7 +205,7 @@ legend {
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: 10px;
   background: var(--surface);
 }
@@ -245,7 +248,7 @@ legend {
 .segmented {
   display: flex;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: 999px;
 }
 
@@ -269,7 +272,7 @@ legend {
 }
 
 .segmented label + label span {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--control-border);
 }
 
 .segmented input:checked + span {
@@ -287,7 +290,7 @@ legend {
 .chips span {
   display: block;
   padding: 8px 0;
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: 10px;
   font-size: 0.9rem;
   text-align: center;
@@ -329,7 +332,7 @@ legend {
   height: 28px;
   margin: 0;
   border-radius: 999px;
-  background: var(--border);
+  background: var(--control-border);
   cursor: pointer;
   transition: background 0.2s;
   appearance: none;
@@ -352,7 +355,9 @@ legend {
   background: var(--accent);
 }
 
+/* 켜진 스위치의 동그라미는 on-accent 색 (다크 모드의 밝은 초록 위에서도 잘 보이게). */
 .switch-row input:checked::after {
+  background: var(--on-accent);
   transform: translateX(20px);
 }
 
