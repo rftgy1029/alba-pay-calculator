@@ -43,3 +43,7 @@ flutter build web --release
 | 고용보험 (근로자) | 0.9% |
 
 계산 결과는 참고용이며, 근로소득세(간이세액)는 아직 포함하지 않습니다.
+
+---
+
+Made By Claude Opus5.5
