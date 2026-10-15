@@ -3,6 +3,8 @@
 2026년 최저시급(10,320원) 기준으로 알바 급여를 계산하는 Flutter 앱입니다.
 웹으로 먼저 출시하고, 계산 로직은 이후 교대근무 캘린더 앱에서 재사용합니다.
 
+**👉 바로 사용하기: https://rftgy1029.github.io/alba-pay-calculator/**
+
 ## 기능
 
 - 시급, 하루 근무시간, 야간 시간(22~06시), 주 근무일수 입력
@@ -24,6 +26,11 @@ flutter test
 flutter run -d chrome
 flutter build web --release
 ```
+
+## 배포
+
+`main`에 푸시하면 GitHub Actions가 테스트 → 웹 빌드 → GitHub Pages 배포를 자동으로 합니다
+(`.github/workflows/deploy-pages.yml`). 테스트가 실패하면 배포되지 않습니다.
 
 ## 기준값 (2026년)
 
