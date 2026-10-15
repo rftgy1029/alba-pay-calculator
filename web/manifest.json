@@ -1,0 +1,35 @@
+{
+    "name": "알바 급여 계산기",
+    "short_name": "알바계산기",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#2E7D6B",
+    "theme_color": "#2E7D6B",
+    "description": "2026년 최저시급 기준 주휴수당·야간수당·실수령액 계산기",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
