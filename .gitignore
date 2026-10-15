@@ -46,3 +46,23 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# 민감 정보 (절대 공개 저장소에 올리지 않기)
+.env
+.env.*
+*.env
+secrets.*
+# 앱 서명 키 (스토어 출시용)
+key.properties
+*.keystore
+*.jks
+*.p12
+*.p8
+*.cer
+*.mobileprovision
+# Firebase 등 외부 서비스 설정
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+# Claude Code 개인 설정
+.claude/settings.local.json
