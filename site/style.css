@@ -72,6 +72,80 @@ body {
   padding: 24px 16px 48px;
 }
 
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* 지금 테마의 반대쪽(바꿀 테마)을 보여 준다. */
+.theme-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-top: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.theme-toggle span {
+  align-items: center;
+  gap: 6px;
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle .to-dark {
+  display: inline-flex;
+}
+
+.theme-toggle .to-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .to-dark {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .to-light {
+  display: inline-flex;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .to-dark {
+    display: none;
+  }
+
+  :root:not([data-theme="light"]) .theme-toggle .to-light {
+    display: inline-flex;
+  }
+}
+
 h1 {
   margin: 0 0 4px;
   font-size: 1.6rem;
