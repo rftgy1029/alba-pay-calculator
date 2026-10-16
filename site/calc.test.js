@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { autoDeduction, calculatePay, defaultYear, formatWon } from './calc.js';
+import { YEARS, autoDeduction, calculatePay, defaultYear, formatWon } from './calc.js';
 
 const fullTime = { hourlyWage: 10320, hoursPerDay: 8, daysPerWeek: 5 };
 
@@ -197,4 +197,60 @@ test('3.3% vs 4대보험 설명 글의 금액', () => {
 
   assert.equal(pay(2026, 10320, 8, 'freelance33').totalDeduction, 71170);
   assert.equal(pay(2026, 10320, 8, 'insurance4').totalDeduction, 209570);
+});
+
+// minimum-wage-monthly/index.html 의 월급표와 비교 금액이 계산기 결과와 같아야 한다.
+test('최저시급 월급 환산 설명 글의 금액', () => {
+  const pay = (year, hourlyWage, hoursPerDay, daysPerWeek = 5, deduction = 'none') =>
+    calculatePay({ year, hourlyWage, hoursPerDay, daysPerWeek, deduction });
+  const hoursOf = (amount) => amount / 10700;
+
+  const rows = [
+    // [하루 근무시간, 주 근무일수, 월 근무시간, 월 주휴시간, 월급]
+    [3, 4, 52, 0, 556400],
+    [3, 5, 65, 13, 834600],
+    [4, 5, 87, 17, 1112800],
+    [5, 5, 109, 22, 1401700],
+    [6, 5, 130, 26, 1669200],
+    [7, 5, 152, 30, 1947400],
+    [8, 5, 174, 35, 2236300],
+  ];
+  for (const [hoursPerDay, daysPerWeek, workHours, holidayHours, monthly] of rows) {
+    const result = pay(2027, 10700, hoursPerDay, daysPerWeek);
+    assert.equal(hoursOf(result.monthly.basePay), workHours);
+    assert.equal(hoursOf(result.monthly.weeklyHolidayPay), holidayHours);
+    assert.equal(result.monthly.gross, monthly);
+  }
+
+  // 2026년과 비교: 일급·주급·월급·연봉
+  const full26 = pay(2026, 10320, 8);
+  const full27 = pay(2027, 10700, 8);
+  assert.equal(full26.weekly.basePay / 5, 82560);
+  assert.equal(full27.weekly.basePay / 5, 85600);
+  assert.equal(full26.weekly.gross, 495360);
+  assert.equal(full27.weekly.gross, 513600);
+  assert.equal(full27.monthly.gross - full26.monthly.gross, 79420);
+  assert.equal(full27.weekly.basePay / 5 - full26.weekly.basePay / 5, 3040);
+  assert.equal(full27.weekly.gross - full26.weekly.gross, 18240);
+  assert.equal((full27.monthly.gross - full26.monthly.gross) * 12, 953040);
+  assert.equal(full26.monthly.gross * 12, 25882560);
+  assert.equal(full27.monthly.gross * 12, 26835600);
+  assert.equal(full27.monthly.weeklyHolidayPay, 374500);
+  assert.equal(full27.monthly.basePay, 1861800);
+  assert.equal(pay(2027, 10700, 4).monthly.gross - pay(2026, 10320, 4).monthly.gross, 39520);
+
+  // 4대보험 공제 후 실수령액
+  const half = pay(2027, 10700, 4, 5, 'insurance4');
+  assert.equal(half.totalDeduction, 110900);
+  assert.equal(half.monthlyNet, 1001900);
+  const full = pay(2027, 10700, 8, 5, 'insurance4');
+  assert.equal(full.totalDeduction, 222880);
+  assert.equal(full.monthlyNet, 2013420);
+
+  // 수습 감액 90%: 9,630원 × 209시간
+  assert.equal(Math.round(YEARS[2027].minimumWage * 0.9), 9630);
+  assert.equal(pay(2027, 9630, 8).monthly.gross, 2012670);
+
+  // 최저임금 위반 확인 예시: 2,000,000원이면 기본급이 236,300원 모자람
+  assert.equal(full27.monthly.gross - 2000000, 236300);
 });

@@ -774,6 +774,14 @@ legend {
   text-align: left;
 }
 
+/* 표 칸 안의 보조 설명 (예: 3시간 × 4일)은 둘째 줄에 작게 쓴다. */
+.wage-table small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
 details {
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
