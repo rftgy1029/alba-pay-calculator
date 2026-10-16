@@ -75,11 +75,148 @@ body {
   padding: 24px 16px 48px;
 }
 
-.header {
+/* 맨 위 줄: 왼쪽 메뉴 버튼, 오른쪽 테마 버튼. */
+.topbar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 16px;
+}
+
+.icon-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--control-border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  border-color: var(--accent);
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ---------- 왼쪽 메뉴 ---------- */
+
+/* <dialog>를 화면 왼쪽에 꽉 차는 서랍처럼 띄운다. */
+.drawer {
+  width: min(80vw, 300px);
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  inset: 0 auto 0 0;
+}
+
+.drawer::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.drawer[open] {
+  animation: drawer-in 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.drawer[open]::backdrop {
+  animation: backdrop-in 0.22s ease-out;
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer[open],
+  .drawer[open]::backdrop {
+    animation: none;
+  }
+}
+
+/* 메뉴가 열려 있는 동안 뒤 화면이 스크롤되지 않게 한다. */
+html:has(.drawer[open]) {
+  overflow: hidden;
+}
+
+/* 서랍 안쪽을 꽉 채워서, 바깥(배경)을 누른 것과 구분한다. */
+.drawer-body {
+  min-height: 100%;
+  padding: 16px;
+}
+
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.drawer-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.drawer-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.drawer-links a {
+  display: block;
+  margin-bottom: 4px;
+  padding: 12px;
+  border-radius: 10px;
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.drawer-links a:hover {
+  background: var(--accent-soft);
+}
+
+.drawer-links a[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.drawer-links a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 /* 지금 테마 이름을 보여 준다. 누르면 반대 테마로 바뀐다. */
@@ -87,7 +224,7 @@ body {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  margin-top: 4px;
+  min-height: 40px;
   padding: 6px 12px;
   border: 1px solid var(--control-border);
   border-radius: 999px;
@@ -730,30 +867,48 @@ details p {
   margin-top: 8px;
 }
 
-.related {
+.related-reading {
   margin-top: 24px;
-  text-align: center;
 }
 
-.related-title {
-  margin: 0 0 4px;
-  color: var(--muted);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
+/* ---------- 아티클 목록 ---------- */
 
-.related ul {
+.article-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.related li {
-  margin: 4px 0;
+.article-card {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--text);
+  text-decoration: none;
 }
 
-.related-reading {
-  margin-top: 24px;
+.article-card:hover {
+  border-color: var(--accent);
+}
+
+.article-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.article-card h2 {
+  margin: 0 0 4px;
+  color: var(--accent-strong);
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.article-card p {
+  margin: 0 0 8px;
+}
+
+.article-card time {
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .footer {

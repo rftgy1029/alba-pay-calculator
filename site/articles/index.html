@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>아티클 | 주휴수당·야간수당 등 알바 급여 설명 글</title>
+  <meta name="description" content="2027년 최저시급 기준 주휴수당, 야간수당 등 알바 급여를 계산하는 방법을 쉽게 정리한 글 모음이에요.">
+  <link rel="canonical" href="https://rftgy1029.github.io/alba-pay-calculator/articles/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rftgy1029.github.io/alba-pay-calculator/articles/">
+  <meta property="og:title" content="아티클 - 알바 급여 설명 글 모음">
+  <meta property="og:description" content="주휴수당, 야간수당 등 알바 급여 계산법을 쉽게 정리한 글 모음이에요.">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="생활 계산기 모음">
+  <meta name="theme-color" content="#f5f7f6">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <script>
+    // 저장해 둔 테마를 화면이 그려지기 전에 적용해서 깜빡임을 막는다.
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <script type="module" src="../theme.js"></script>
+  <script type="module" src="../menu.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "알바 급여 계산기", "item": "https://rftgy1029.github.io/alba-pay-calculator/" },
+      { "@type": "ListItem", "position": 2, "name": "아티클", "item": "https://rftgy1029.github.io/alba-pay-calculator/articles/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "url": "https://rftgy1029.github.io/alba-pay-calculator/night-shift-pay/", "name": "2027 야간수당 계산법" },
+      { "@type": "ListItem", "position": 2, "url": "https://rftgy1029.github.io/alba-pay-calculator/weekly-holiday-pay/", "name": "2027 주휴수당 계산법" }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="topbar">
+        <button type="button" id="menu-open" class="icon-button" aria-label="메뉴 열기" aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></svg>
+        </button>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="화면 테마 바꾸기">
+          <span class="when-light">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+            라이트
+          </span>
+          <span class="when-dark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            다크
+          </span>
+        </button>
+      </div>
+      <nav class="breadcrumb" aria-label="현재 위치">
+        <a href="../">알바 급여 계산기</a> <span aria-hidden="true">›</span> 아티클
+      </nav>
+      <h1>아티클</h1>
+      <p class="lead">알바 급여와 수당을 계산기 기준 그대로 쉽게 풀어 쓴 글이에요.</p>
+    </header>
+
+    <dialog id="site-menu" class="drawer" aria-label="메뉴">
+      <div class="drawer-body">
+        <div class="drawer-head">
+          <p class="drawer-title">생활 계산기 모음</p>
+          <button type="button" class="icon-button drawer-close" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <nav aria-label="사이트 메뉴">
+          <ul class="drawer-links">
+            <li><a href="../">알바 급여 계산기</a></li>
+            <li><a href="../articles/" aria-current="page">아티클</a></li>
+          </ul>
+        </nav>
+      </div>
+    </dialog>
+
+    <ul class="article-list">
+        <li>
+          <a class="card article-card" href="../night-shift-pay/">
+            <h2>2027 야간수당 계산법</h2>
+            <p>밤 10시~아침 6시 50% 가산, 휴게시간 빼는 법, 연장근로와 겹칠 때 2배 계산과 시간별 금액표를 정리했어요.</p>
+            <time datetime="2026-10-16">2026년 10월 16일</time>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../weekly-holiday-pay/">
+            <h2>2027 주휴수당 계산법</h2>
+            <p>주 15시간 조건과 개근 기준, 퇴사하는 주에 받는 법, 근무시간별 주휴수당 금액표를 정리했어요.</p>
+            <time datetime="2026-10-16">2026년 10월 16일</time>
+          </a>
+        </li>
+    </ul>
+
+    <footer class="footer">
+      <p>글은 일반적인 기준을 정리한 참고 자료예요. 실제 급여는 근로계약과 사업장 상황에 따라 달라질 수 있어요.</p>
+      <p><a href="../">알바 급여 계산기로 돌아가기</a></p>
+    </footer>
+  </main>
+</body>
+</html>
