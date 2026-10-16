@@ -120,3 +120,21 @@ test('금액 표시', () => {
   assert.equal(formatWon(2156880), '2,156,880원');
   assert.equal(formatWon(0), '0원');
 });
+
+// weekly-holiday-pay/index.html 금액표가 계산기 결과와 같아야 한다.
+test('주휴수당 설명 글의 2027년 금액표', () => {
+  const rows = [
+    // [하루 근무시간, 주 근무일수, 주 주휴수당, 월 주휴수당]
+    [3, 4, 0, 0],
+    [3, 5, 32100, 139100],
+    [4, 5, 42800, 181900],
+    [5, 5, 53500, 235400],
+    [6, 5, 64200, 278200],
+    [8, 5, 85600, 374500],
+  ];
+  for (const [hoursPerDay, daysPerWeek, weekly, monthly] of rows) {
+    const result = calculatePay({ year: 2027, hourlyWage: 10700, hoursPerDay, daysPerWeek });
+    assert.equal(result.weekly.weeklyHolidayPay, weekly);
+    assert.equal(result.monthly.weeklyHolidayPay, monthly);
+  }
+});

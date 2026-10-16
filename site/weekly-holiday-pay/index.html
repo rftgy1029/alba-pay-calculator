@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2027 주휴수당 계산법 | 조건·공식·시간별 금액표 (시급 10,700원)</title>
+  <meta name="description" content="2027년 최저시급 10,700원 기준 주휴수당 계산법. 주 15시간 조건, (주 근무시간 ÷ 40) × 8 × 시급 공식, 주 15·20·25·30·40시간별 주휴수당 금액표와 자주 묻는 질문을 정리했어요.">
+  <link rel="canonical" href="https://rftgy1029.github.io/alba-pay-calculator/weekly-holiday-pay/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rftgy1029.github.io/alba-pay-calculator/weekly-holiday-pay/">
+  <meta property="og:title" content="2027 주휴수당 계산법 - 조건·공식·시간별 금액표">
+  <meta property="og:description" content="시급 10,700원 기준으로 주 15시간부터 40시간까지 주휴수당이 얼마인지 표로 정리했어요.">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="생활 계산기 모음">
+  <meta name="theme-color" content="#f5f7f6">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <script>
+    // 저장해 둔 테마를 화면이 그려지기 전에 적용해서 깜빡임을 막는다.
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <script type="module" src="../theme.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "2027 주휴수당 계산법: 조건·공식·시간별 금액표",
+    "inLanguage": "ko",
+    "datePublished": "2026-10-16",
+    "dateModified": "2026-10-16",
+    "mainEntityOfPage": "https://rftgy1029.github.io/alba-pay-calculator/weekly-holiday-pay/",
+    "author": { "@type": "Organization", "name": "생활 계산기 모음", "url": "https://rftgy1029.github.io/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "알바 급여 계산기", "item": "https://rftgy1029.github.io/alba-pay-calculator/" },
+      { "@type": "ListItem", "position": 2, "name": "2027 주휴수당 계산법", "item": "https://rftgy1029.github.io/alba-pay-calculator/weekly-holiday-pay/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "5인 미만 사업장도 주휴수당을 줘야 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. 주휴수당은 근로자 수와 상관없이 1명만 고용한 곳에도 적용돼요. 5인 미만 사업장에서 빠지는 건 연장·야간·휴일 가산수당이에요." }
+      },
+      {
+        "@type": "Question",
+        "name": "지각이나 조퇴를 하면 주휴수당이 없어지나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. 주휴수당 조건인 개근은 결근하지 않았다는 뜻이라, 지각·조퇴가 있어도 출근은 한 것으로 봐요. 다만 일하지 않은 시간만큼 기본급은 줄 수 있어요." }
+      },
+      {
+        "@type": "Question",
+        "name": "주 40시간보다 더 일하면 주휴수당도 늘어나나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. 주휴수당은 소정근로시간 기준이라 최대 8시간분이에요. 2027년 최저시급이면 한 주 85,600원이 상한이고, 40시간을 넘는 시간은 연장근로로 따로 계산해요." }
+      },
+      {
+        "@type": "Question",
+        "name": "주휴수당을 못 받았으면 어떻게 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "먼저 사업주에게 근무 기록과 함께 요청하고, 해결되지 않으면 고용노동부에 임금체불 진정을 낼 수 있어요. 임금 청구권은 3년 동안 유효해요." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div>
+        <nav class="breadcrumb" aria-label="현재 위치">
+          <a href="../">알바 급여 계산기</a> <span aria-hidden="true">›</span> 설명 글
+        </nav>
+        <h1>2027 주휴수당 계산법</h1>
+        <p class="lead">조건, 공식, 근무시간별 금액을 2027년 최저시급 10,700원 기준으로 정리했어요.</p>
+      </div>
+      <button type="button" id="theme-toggle" class="theme-toggle" aria-label="화면 테마 바꾸기">
+        <span class="when-light">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+          라이트
+        </span>
+        <span class="when-dark">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          다크
+        </span>
+      </button>
+    </header>
+
+    <article class="content article">
+      <section class="card summary-card">
+        <h2>한눈에 보기</h2>
+        <ul>
+          <li>1주에 <strong>15시간 이상</strong> 일하기로 했고, 정해진 날 <strong>모두 출근</strong>하면 받아요.</li>
+          <li>공식은 <strong>(1주 소정근로시간 ÷ 40) × 8 × 시급</strong>이에요.</li>
+          <li>2027년 최저시급이면 주 20시간은 한 주 <strong>42,800원</strong>, 주 40시간은 <strong>85,600원</strong>이에요.</li>
+          <li><strong>5인 미만 사업장</strong>도 똑같이 줘야 해요.</li>
+        </ul>
+      </section>
+
+      <h2>주휴수당이란</h2>
+      <p>일주일 동안 정해진 근무를 다 채운 사람에게 하루치 유급 휴일을 주는 제도예요. 쉬는 날에도 일한 것처럼 임금을 받기 때문에, 시급만 보고 계산한 알바비보다 실제 받을 돈이 더 많아요.</p>
+      <p>근로기준법 제55조가 근거라서 사업주가 "우리 가게는 주휴수당 없어요"라고 정할 수 없어요. 근로계약서에 빠져 있어도 조건을 채우면 받을 수 있어요.</p>
+
+      <h2>받는 조건 두 가지</h2>
+      <h3>1. 1주 소정근로시간 15시간 이상</h3>
+      <p>소정근로시간은 근로계약서에 정한 근무시간이에요. 하루 3시간씩 주 5일이면 15시간이라 조건을 채우고, 하루 3시간씩 주 4일이면 12시간이라 받지 못해요.</p>
+      <p>계약은 14시간인데 가끔 더 일해서 15시간을 넘긴 주가 있다면, 그 주에 정해진 시간이 몇 시간이었는지가 기준이에요. 실제로 매주 15시간 넘게 일하고 있다면 계약 자체를 다시 확인해 보세요.</p>
+
+      <h3>2. 정해진 근무일에 개근</h3>
+      <p>그 주에 일하기로 한 날 모두 출근하면 돼요. 결근만 없으면 되고, 지각이나 조퇴는 결근이 아니라서 주휴수당이 사라지지 않아요.</p>
+      <p>그만두는 마지막 주라도 그 주 근무를 끝까지 다 채웠다면 주휴수당이 생길 수 있어요. 주 중간에 그만두면 그 주는 받지 못해요.</p>
+
+      <h2>계산 공식</h2>
+      <p class="formula">주휴수당 = (1주 소정근로시간 ÷ 40) × 8시간 × 시급</p>
+      <p>1주 소정근로시간은 최대 40시간까지만 넣어요. 그래서 주휴수당은 아무리 오래 일해도 8시간분이 상한이에요. 40시간을 넘는 시간은 주휴수당이 아니라 연장근로로 따로 계산해요.</p>
+
+      <h3>예시: 하루 4시간, 주 5일, 시급 10,700원</h3>
+      <ol class="steps">
+        <li>1주 소정근로시간: 4시간 × 5일 = 20시간</li>
+        <li>주휴시간: 20 ÷ 40 × 8 = 4시간</li>
+        <li>주휴수당: 4시간 × 10,700원 = <strong>42,800원</strong></li>
+      </ol>
+      <p>한 주 기본급 214,000원에 주휴수당 42,800원이 붙어서, 한 주에 받는 돈은 256,800원이에요.</p>
+
+      <h2>2027년 근무시간별 주휴수당</h2>
+      <p>시급 10,700원(2027년 최저시급), 주 5일 근무 기준이에요. 표의 금액은 주휴수당만이고, 한 달 금액은 평균 4.345주로 환산한 값이에요.</p>
+      <div class="table-scroll">
+        <table class="wage-table">
+          <thead>
+            <tr><th scope="col">1주 근무</th><th scope="col">주휴시간</th><th scope="col">한 주</th><th scope="col">한 달</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>12시간</td><td>없음</td><td>0원</td><td>0원</td></tr>
+            <tr><td>15시간</td><td>3시간</td><td>32,100원</td><td>139,100원</td></tr>
+            <tr><td>20시간</td><td>4시간</td><td>42,800원</td><td>181,900원</td></tr>
+            <tr><td>25시간</td><td>5시간</td><td>53,500원</td><td>235,400원</td></tr>
+            <tr><td>30시간</td><td>6시간</td><td>64,200원</td><td>278,200원</td></tr>
+            <tr><td>40시간</td><td>8시간</td><td>85,600원</td><td>374,500원</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>주 40시간을 일하면 월급 2,236,300원(209시간분) 중 374,500원이 주휴수당이에요. 시급이 최저시급보다 높다면 표의 금액에 비율만큼 더하면 돼요.</p>
+
+      <section class="card cta-card">
+        <h2>내 근무시간으로 계산해 보기</h2>
+        <p>시급, 하루 근무시간, 주 근무일수만 넣으면 주휴수당과 야간수당, 공제 후 실수령액까지 바로 나와요.</p>
+        <a class="primary-button" href="../?y=2027">2027년 기준으로 계산하기</a>
+      </section>
+
+      <h2>2026년과 비교</h2>
+      <table class="wage-table">
+        <thead>
+          <tr><th scope="col">1주 근무</th><th scope="col">2026년 (10,320원)</th><th scope="col">2027년 (10,700원)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>15시간</td><td>30,960원</td><td>32,100원</td></tr>
+          <tr><td>20시간</td><td>41,280원</td><td>42,800원</td></tr>
+          <tr><td>40시간</td><td>82,560원</td><td>85,600원</td></tr>
+        </tbody>
+      </table>
+      <p>주 40시간 기준으로 한 주에 3,040원, 한 달이면 약 13,000원 정도 주휴수당이 늘어요.</p>
+
+      <h2>월급에 주휴수당이 들어 있는지 확인하는 법</h2>
+      <p>월급제 알바라면 급여명세서에 주휴수당이 따로 적혀 있지 않을 수 있어요. 주 40시간 근무인데 월급이 시급 × 209시간 이상이면 주휴수당이 포함된 거예요. 2027년 최저시급이면 2,236,300원이 기준이에요.</p>
+      <p>시급 × 174시간(주휴 없이 일한 시간만) 정도만 받고 있다면 주휴수당이 빠졌을 가능성이 커요.</p>
+
+      <h2>자주 묻는 질문</h2>
+      <details>
+        <summary>5인 미만 사업장도 주휴수당을 줘야 하나요?</summary>
+        <p>네. 주휴수당은 근로자 수와 상관없이 1명만 고용한 곳에도 적용돼요. 5인 미만 사업장에서 빠지는 건 연장·야간·휴일 가산수당이에요.</p>
+      </details>
+      <details>
+        <summary>지각이나 조퇴를 하면 주휴수당이 없어지나요?</summary>
+        <p>아니요. 주휴수당 조건인 개근은 결근하지 않았다는 뜻이라, 지각·조퇴가 있어도 출근은 한 것으로 봐요. 다만 일하지 않은 시간만큼 기본급은 줄 수 있어요.</p>
+      </details>
+      <details>
+        <summary>주 40시간보다 더 일하면 주휴수당도 늘어나나요?</summary>
+        <p>아니요. 주휴수당은 소정근로시간 기준이라 최대 8시간분이에요. 2027년 최저시급이면 한 주 85,600원이 상한이고, 40시간을 넘는 시간은 연장근로로 따로 계산해요.</p>
+      </details>
+      <details>
+        <summary>주휴수당을 못 받았으면 어떻게 하나요?</summary>
+        <p>먼저 사업주에게 근무 기록과 함께 요청하고, 해결되지 않으면 고용노동부에 임금체불 진정을 낼 수 있어요. 임금 청구권은 3년 동안 유효해요.</p>
+      </details>
+    </article>
+
+    <footer class="footer">
+      <p>이 글은 일반적인 기준을 정리한 참고 자료예요. 실제 지급 여부는 근로계약과 근무 기록에 따라 달라질 수 있어요.</p>
+      <p>기준: 근로기준법 제55조, 2027년 최저임금 고시 · 마지막 업데이트 2026년 10월 16일</p>
+      <p><a href="../">알바 급여 계산기로 돌아가기</a></p>
+    </footer>
+  </main>
+</body>
+</html>
