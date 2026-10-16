@@ -942,6 +942,18 @@ details p {
   margin-top: 12px;
 }
 
+/* 글자로 된 비교표는 왼쪽 정렬 */
+.compare-table th,
+.compare-table td {
+  text-align: left;
+  vertical-align: top;
+}
+
+.compare-table tbody th {
+  color: var(--muted);
+  font-weight: 600;
+}
+
 /* 개인정보 처리방침의 항목표: 왼쪽 제목, 오른쪽 설명 */
 .policy-table th,
 .policy-table td {

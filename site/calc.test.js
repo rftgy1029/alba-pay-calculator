@@ -174,3 +174,27 @@ test('야간수당 설명 글의 2027년 예시와 금액표', () => {
     assert.equal(result.monthly.nightPay, monthly);
   }
 });
+
+// tax-33-vs-insurance/index.html 의 실수령액 비교 금액이 계산기 결과와 같아야 한다.
+test('3.3% vs 4대보험 설명 글의 금액', () => {
+  const pay = (year, hourlyWage, hoursPerDay, deduction) =>
+    calculatePay({ year, hourlyWage, hoursPerDay, daysPerWeek: 5, deduction });
+
+  const full33 = pay(2027, 10700, 8, 'freelance33');
+  const fullIns = pay(2027, 10700, 8, 'insurance4');
+  assert.equal(full33.monthly.gross, 2236300);
+  assert.equal(full33.totalDeduction, 73780);
+  assert.equal(full33.monthlyNet, 2162520);
+  assert.equal(fullIns.totalDeduction, 222880);
+  assert.equal(fullIns.monthlyNet, 2013420);
+  assert.deepEqual(fullIns.deductions.map((item) => item.amount), [111810, 80390, 10560, 20120]);
+
+  const half33 = pay(2027, 10700, 4, 'freelance33');
+  const halfIns = pay(2027, 10700, 4, 'insurance4');
+  assert.equal(half33.monthly.gross, 1112800);
+  assert.equal(half33.monthlyNet, 1076090);
+  assert.equal(halfIns.monthlyNet, 1001900);
+
+  assert.equal(pay(2026, 10320, 8, 'freelance33').totalDeduction, 71170);
+  assert.equal(pay(2026, 10320, 8, 'insurance4').totalDeduction, 209570);
+});
