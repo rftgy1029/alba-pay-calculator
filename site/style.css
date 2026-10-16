@@ -708,8 +708,21 @@ details p {
   overflow-x: auto;
 }
 
-.table-scroll .wage-table {
-  min-width: 320px;
+.table-scroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 아주 좁은 화면(320px)에서도 네 칸이 다 들어가게 글자와 여백을 줄인다. */
+@media (max-width: 359px) {
+  .table-scroll .wage-table {
+    font-size: 0.9rem;
+  }
+
+  .table-scroll .wage-table th,
+  .table-scroll .wage-table td {
+    padding: 8px 2px;
+  }
 }
 
 .wage-table + p,
