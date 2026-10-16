@@ -735,6 +735,27 @@ details p {
   text-align: center;
 }
 
+.related-title {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.related ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related li {
+  margin: 4px 0;
+}
+
+.related-reading {
+  margin-top: 24px;
+}
+
 .footer {
   margin-top: 32px;
   color: var(--muted);

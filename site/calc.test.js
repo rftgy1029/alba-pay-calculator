@@ -138,3 +138,39 @@ test('주휴수당 설명 글의 2027년 금액표', () => {
     assert.equal(result.monthly.weeklyHolidayPay, monthly);
   }
 });
+
+// night-shift-pay/index.html 예시와 금액표가 계산기 결과와 같아야 한다.
+test('야간수당 설명 글의 2027년 예시와 금액표', () => {
+  const pay = (hoursPerDay, nightHoursPerDay, daysPerWeek = 5, fiveOrMoreEmployees = true) =>
+    calculatePay({ year: 2027, hourlyWage: 10700, hoursPerDay, nightHoursPerDay, daysPerWeek, fiveOrMoreEmployees });
+
+  // 예시 1: 편의점 야간 8시간 중 야간 7시간, 주 5일
+  const convenience = pay(8, 7);
+  assert.equal(convenience.weekly.nightPay, 187250);
+  assert.equal(convenience.weekly.gross, 700850);
+  assert.equal(convenience.monthly.gross, 3049500);
+  assert.equal(pay(8, 7, 5, false).monthly.gross, 2236300);
+
+  // 예시 2: 6시간 중 야간 2시간, 주 3일
+  assert.equal(pay(6, 2, 3).weekly.nightPay, 32100);
+
+  // 연장과 겹치는 예시: 하루 10시간 중 야간 8시간 (하루치 = 주 5일 ÷ 5)
+  const overlap = pay(10, 8);
+  assert.equal(overlap.weekly.basePay / 5, 107000);
+  assert.equal(overlap.weekly.overtimePay / 5, 10700);
+  assert.equal(overlap.weekly.nightPay / 5, 42800);
+
+  const rows = [
+    // [하루 야간시간, 주 야간수당, 월 야간수당]
+    [1, 26750, 117700],
+    [2, 53500, 230050],
+    [4, 107000, 465450],
+    [6, 160500, 695500],
+    [8, 214000, 930900],
+  ];
+  for (const [night, weekly, monthly] of rows) {
+    const result = pay(8, night);
+    assert.equal(result.weekly.nightPay, weekly);
+    assert.equal(result.monthly.nightPay, monthly);
+  }
+});
