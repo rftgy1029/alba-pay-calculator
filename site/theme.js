@@ -9,7 +9,8 @@ const currentTheme = () => root.dataset.theme || (systemDark.matches ? 'dark' : 
 
 function updateUi() {
   const theme = currentTheme();
-  button.setAttribute('aria-label', theme === 'dark' ? '라이트 모드로 바꾸기' : '다크 모드로 바꾸기');
+  // 보이는 글자(라이트/다크)가 이름에 들어가야 음성 제어로 '라이트 누르기'처럼 부를 수 있다.
+  button.setAttribute('aria-label', theme === 'dark' ? '다크 테마 사용 중, 라이트 모드로 바꾸기' : '라이트 테마 사용 중, 다크 모드로 바꾸기');
   themeColor.content = theme === 'dark' ? '#0f1312' : '#f5f7f6';
 }
 

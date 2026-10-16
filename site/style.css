@@ -57,6 +57,8 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* 메뉴가 열려 스크롤바가 사라져도 화면이 옆으로 밀리지 않게 자리를 남겨 둔다. */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -212,6 +214,14 @@ html:has(.drawer[open]) {
 .drawer-links a[aria-current="page"] {
   background: var(--accent-soft);
   color: var(--accent-strong);
+}
+
+/* 고대비 모드에서는 배경색이 사라지므로 테두리로 지금 페이지를 표시한다. */
+@media (forced-colors: active) {
+  .drawer-links a[aria-current="page"] {
+    outline: 2px solid CanvasText;
+    outline-offset: -2px;
+  }
 }
 
 .drawer-links a:focus-visible {
