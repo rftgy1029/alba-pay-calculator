@@ -883,6 +883,10 @@ details p {
 
 /* ---------- 아티클 목록 ---------- */
 
+.article-intro {
+  margin: 0 0 16px;
+}
+
 .article-list {
   margin: 0;
   padding: 0;
@@ -929,6 +933,26 @@ details p {
 
 .footer p {
   margin: 0 0 4px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 12px;
+}
+
+/* 개인정보 처리방침의 항목표: 왼쪽 제목, 오른쪽 설명 */
+.policy-table th,
+.policy-table td {
+  text-align: left;
+  vertical-align: top;
+}
+
+.policy-table th {
+  width: 6.5em;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .visually-hidden {
