@@ -1,4 +1,4 @@
-# main에 푸시하면 웹 계산 로직 테스트 → site/ 폴더를 GitHub Pages에 배포한다.
+# main에 푸시하면 웹 계산 로직 테스트 → 테스트 파일을 뺀 site/ 폴더를 GitHub Pages에 배포한다.
 name: Deploy to GitHub Pages
 
 on:
@@ -27,6 +27,10 @@ jobs:
 
       # 테스트가 실패하면 배포하지 않는다.
       - run: node --test calc.test.js
+        working-directory: site
+
+      # 테스트용 파일은 공개 사이트에 올리지 않는다.
+      - run: rm calc.test.js package.json
         working-directory: site
 
       - uses: actions/upload-pages-artifact@v3
