@@ -27,6 +27,8 @@
 
 계산 규칙을 바꿀 때는 `site/calc.js`와 `lib/pay_calculator.dart`를 함께 고칩니다.
 
+퇴직금 계산기(`site/severance-pay/`)는 웹에만 있어요. 계산 로직은 `site/severance.js`, 화면 동작은 `site/severance-pay/severance-app.js`이고 테스트는 `site/calc.test.js`에 함께 있습니다.
+
 ## 실행
 
 ```bash

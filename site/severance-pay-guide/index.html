@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>알바 퇴직금 계산법 (2027) | 조건·평균임금·지급 기한·못 받았을 때</title>
+  <meta name="description" content="알바도 1년 이상, 주 15시간 이상이면 퇴직금을 받아요. 평균임금과 통상임금 비교, 상여금·연차수당 3/12 가산, 재직일수 계산, 14일 지급 기한, 못 받았을 때 진정과 3년 시효를 2027년 최저시급 10,700원 예시로 정리했어요.">
+  <link rel="canonical" href="https://rftgy1029.github.io/alba-pay-calculator/severance-pay-guide/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rftgy1029.github.io/alba-pay-calculator/severance-pay-guide/">
+  <meta property="og:title" content="알바 퇴직금 계산법 (2027) - 조건·공식·사례">
+  <meta property="og:description" content="1년·주 15시간 조건부터 평균임금 계산, 근무시간별 퇴직금 표, 못 받았을 때 대응까지 정리했어요.">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="생활 계산기 모음">
+  <meta name="theme-color" content="#f5f7f6">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <meta name="google-adsense-account" content="ca-pub-1951051252794060">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1951051252794060" crossorigin="anonymous"></script>
+  <script>
+    // 저장해 둔 테마를 화면이 그려지기 전에 적용해서 깜빡임을 막는다.
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <script type="module" src="../theme.js"></script>
+  <script type="module" src="../menu.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "알바 퇴직금 계산법 (2027): 조건·평균임금·지급 기한·못 받았을 때",
+    "inLanguage": "ko",
+    "datePublished": "2026-10-17",
+    "dateModified": "2026-10-17",
+    "mainEntityOfPage": "https://rftgy1029.github.io/alba-pay-calculator/severance-pay-guide/",
+    "author": { "@type": "Person", "name": "정찬영", "url": "https://rftgy1029.github.io/about.html" },
+    "publisher": { "@type": "Organization", "name": "생활 계산기 모음", "url": "https://rftgy1029.github.io/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "알바 급여 계산기", "item": "https://rftgy1029.github.io/alba-pay-calculator/" },
+      { "@type": "ListItem", "position": 2, "name": "아티클", "item": "https://rftgy1029.github.io/alba-pay-calculator/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "알바 퇴직금 계산법 (2027)", "item": "https://rftgy1029.github.io/alba-pay-calculator/severance-pay-guide/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "1년에서 하루 모자라면 퇴직금을 못 받나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. 계속근로기간이 1년 미만이면 법정 퇴직금 대상이 아니에요. 3월 2일에 입사했다면 다음 해 3월 1일까지 일해야 1년이에요. 퇴사 날짜를 정할 때 마지막 근무일을 꼭 확인하세요." }
+      },
+      {
+        "@type": "Question",
+        "name": "퇴직금은 세금을 떼나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "퇴직금은 퇴직소득이라 퇴직소득세가 원천징수될 수 있어요. 금액과 근속연수에 따라 달라서, 이 글과 계산기의 금액은 세전이에요. 국세청 홈택스의 퇴직소득 세액계산 프로그램으로 확인할 수 있어요." }
+      },
+      {
+        "@type": "Question",
+        "name": "퇴직금을 월급에 나눠서 미리 받았다고 하면 어떻게 되나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "퇴직금은 퇴직할 때 생기는 돈이에요. 퇴직 전에 미리 정산해 줄 수 있는 건 무주택자의 주택 구입처럼 법에 정한 사유로 근로자가 요구한 경우뿐이에요(근로자퇴직급여 보장법 제8조 제2항, 시행령 제3조). 그런 사유 없이 월급에 퇴직금이 들어 있다고 한 약정은 퇴직금을 준 것으로 인정받기 어려워요. 급여명세서와 계약서를 챙겨 고용노동부(1350)에 상담해 보세요." }
+      },
+      {
+        "@type": "Question",
+        "name": "중간에 시급이 올랐으면 어떤 시급으로 계산하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "퇴직 전 3개월 동안 실제로 받은 임금으로 계산해요. 2026년에 입사해 2027년에 퇴사하면 그 전의 시급과 상관없이 2027년 시급으로 받은 마지막 3개월 임금이 기준이에요." }
+      },
+      {
+        "@type": "Question",
+        "name": "퇴직금을 못 받으면 언제까지 청구할 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "퇴직금을 받을 권리는 3년 동안 행사하지 않으면 시효로 사라져요(근로자퇴직급여 보장법 제10조). 퇴직하고 3년이 지나기 전에 고용노동부에 진정을 내거나 청구하세요." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="topbar">
+        <button type="button" id="menu-open" class="icon-button" aria-label="메뉴 열기" aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></svg>
+        </button>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="화면 테마 바꾸기">
+          <span class="when-light">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+            라이트
+          </span>
+          <span class="when-dark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            다크
+          </span>
+        </button>
+      </div>
+      <nav class="breadcrumb" aria-label="현재 위치">
+        <a href="../">알바 급여 계산기</a> <span aria-hidden="true">›</span> <a href="../articles/">아티클</a>
+      </nav>
+      <h1>알바 퇴직금 계산법 (2027)</h1>
+      <p class="lead">받는 조건부터 평균임금 계산, 지급 기한, 못 받았을 때 대응까지 2027년 최저시급 10,700원 예시로 정리했어요.</p>
+      <p class="byline">글 <a href="/about.html">정찬영</a> · 작성 <time datetime="2026-10-17">2026.10.17</time></p>
+    </header>
+
+    <dialog id="site-menu" class="drawer" aria-label="메뉴">
+      <div class="drawer-body">
+        <div class="drawer-head">
+          <p class="drawer-title">생활 계산기 모음</p>
+          <button type="button" class="icon-button drawer-close" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <nav aria-label="사이트 메뉴">
+          <ul class="drawer-links">
+            <li><a href="/">홈</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-calculators">계산기</p>
+          <ul class="drawer-links" aria-labelledby="menu-calculators">
+            <li><a href="/alba-pay-calculator/">알바 급여 계산기</a></li>
+            <li><a href="/alba-pay-calculator/severance-pay/">퇴직금 계산기</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-articles">글</p>
+          <ul class="drawer-links" aria-labelledby="menu-articles">
+            <li><a href="/alba-pay-calculator/articles/">아티클</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-site">사이트 정보</p>
+          <ul class="drawer-links" aria-labelledby="menu-site">
+            <li><a href="/about.html">소개</a></li>
+            <li><a href="/about.html#contact">문의</a></li>
+            <li><a href="/privacy_policy.html">개인정보 처리방침</a></li>
+          </ul>
+        </nav>
+      </div>
+    </dialog>
+
+    <article class="content article">
+      <section class="card summary-card">
+        <h2>한눈에 보기</h2>
+        <ul>
+          <li><strong>1년 이상</strong> 일했고, <strong>4주 평균 주 15시간 이상</strong>이면 알바도 받아요. <strong>5인 미만 사업장</strong>도 마찬가지예요.</li>
+          <li>공식은 <strong>1일 평균임금 × 30일 × 재직일수 ÷ 365</strong>예요.</li>
+          <li>평균임금은 <strong>퇴직 전 3개월 임금</strong>으로 구하고, 1년 치 상여금·연차수당은 <strong>3/12</strong>만 더해요.</li>
+          <li>퇴직하고 <strong>14일 이내</strong>에 받아야 하고, 못 받으면 <strong>3년 안에</strong> 청구해야 해요.</li>
+        </ul>
+      </section>
+
+      <h2>알바도 퇴직금을 받나요</h2>
+      <p>받아요. 퇴직금은 정규직만의 제도가 아니라, 근로자퇴직급여 보장법이 정한 조건을 채운 모든 근로자에게 생기는 권리예요. 근로계약서에 '퇴직금 없음'이라고 써 있어도 조건을 채우면 받을 수 있어요.</p>
+      <h3>조건 1. 계속근로기간 1년 이상</h3>
+      <p>같은 사업장에서 끊기지 않고 1년 넘게 일해야 해요. 입사일이 3월 2일이면 다음 해 3월 1일까지 일해야 딱 1년이에요. 2월 28일까지만 일하면 1년이 안 돼서 받지 못해요.</p>
+      <h3>조건 2. 4주 평균 1주 소정근로시간 15시간 이상</h3>
+      <p>소정근로시간은 근로계약서로 정한 근무시간이에요. 4주를 평균해서 1주 15시간 이상이면 돼요. 주휴수당 조건과 같은 기준이라, 주휴수당을 받고 있었다면 이 조건은 대부분 채운 거예요.</p>
+      <h3>사업장 규모는 상관없어요</h3>
+      <p>퇴직금은 근로자를 쓰는 모든 사업장에 적용돼요(같은 법 제3조). 상시 근로자 4명 이하 사업장도 2010년 12월부터 적용됐고, 2013년부터는 다른 사업장과 같은 금액을 받아요. 예외는 동거하는 친족만 고용한 사업과 가구 안에서 일하는 가사 근로뿐이에요.</p>
+
+      <h2>퇴직금 계산 공식</h2>
+      <p class="formula">퇴직금 = 1일 평균임금 × 30일 × (재직일수 ÷ 365)</p>
+      <p>1년마다 평균임금 30일분이에요. 1년을 넘긴 날도 일 단위로 계산해서, 1년 6개월 일했다면 약 1.5년 치를 받아요. 아래 네 가지를 차례로 구하면 돼요.</p>
+
+      <h2>1. 재직일수 계산</h2>
+      <p>입사일부터 마지막 근무일까지 달력의 날 수를 모두 세요. 주말과 휴일도 들어가요. 퇴직금 계산에서 <strong>퇴직일은 마지막 근무일의 다음 날</strong>이라, 재직일수는 퇴직일에서 입사일을 뺀 값이에요.</p>
+      <ul>
+        <li>2027년 1월 1일 입사, 2027년 12월 31일까지 근무 → 365일</li>
+        <li>2027년 3월 1일 입사, 2028년 2월 29일까지 근무 → 366일 (2028년은 윤년이라 2월 29일이 있어요)</li>
+      </ul>
+      <p>윤년이 끼면 1년이 366일이라 재직일수 ÷ 365가 1보다 조금 커요. 그만큼 퇴직금도 조금 늘어요.</p>
+
+      <h2>2. 평균임금 계산 (퇴직 전 3개월)</h2>
+      <p>평균임금은 퇴직일 전 3개월 동안 받은 임금 총액을 그 기간의 총 일수로 나눈 금액이에요(근로기준법 제2조 제1항 제6호).</p>
+      <p class="formula">1일 평균임금 = 퇴직 전 3개월 임금 총액 ÷ 그 기간의 총 일수</p>
+      <p>기간은 퇴직일 3개월 전 같은 날부터 마지막 근무일까지예요. 퇴직일이 2028년 1월 1일이면 2027년 10월 1일~12월 31일이라 92일, 퇴직일이 2027년 12월 1일이면 9월 1일~11월 30일이라 91일이에요. 같은 3개월이라도 달에 따라 89~92일로 달라져요.</p>
+      <p>임금 총액은 세전 금액이고, 기본급만이 아니라 주휴수당, 연장·야간·휴일수당처럼 일한 대가로 받은 돈을 모두 넣어요.</p>
+      <h3>3개월 기간에서 빼는 기간</h3>
+      <p>퇴직 전 3개월 안에 아래 기간이 있으면 그 날짜와 그동안 받은 임금을 모두 빼고 계산해요(근로기준법 시행령 제2조). 평균임금이 억울하게 낮아지지 않게 하려는 규정이에요.</p>
+      <ul>
+        <li>수습을 시작한 날부터 3개월 이내의 기간</li>
+        <li>회사 사정으로 쉰 휴업 기간</li>
+        <li>출산전후휴가, 유산·사산 휴가 기간</li>
+        <li>업무상 다치거나 병에 걸려 요양한 기간</li>
+        <li>육아휴직 기간, 쟁의행위 기간 등</li>
+      </ul>
+
+      <h2>3. 상여금·연차수당 3/12 가산</h2>
+      <p>상여금이나 연차수당은 1년에 한두 번 몰아서 받아서, 마지막 3개월에 들어 있느냐에 따라 평균임금이 크게 흔들려요. 그래서 퇴직 전 1년 동안 받은 금액의 3/12(3개월 치)만 3개월 임금에 더해요. 고용노동부 퇴직금 계산기도 같은 방식으로 계산해요.</p>
+      <p class="formula">평균임금에 넣는 임금 = 3개월 임금 + 연간 상여금 × 3/12 + 연차수당 × 3/12</p>
+      <ul>
+        <li><strong>상여금</strong>: 명절 상여금처럼 정해진 대로 받는 돈이면 넣어요. 1년에 40만원을 받았다면 10만원을 더해요.</li>
+        <li><strong>연차수당</strong>: 고용노동부 계산 예제는 퇴직 전 해에 쓰지 못한 연차를 돈으로 받은 금액을 넣어요. 상시 5인 미만 사업장이거나 주 15시간 미만이면 연차휴가 자체가 없어서 해당하지 않아요.</li>
+      </ul>
+
+      <h2>4. 평균임금과 통상임금 비교</h2>
+      <p>근로기준법 제2조 제2항은 평균임금이 통상임금보다 적으면 통상임금을 평균임금으로 한다고 정해요. 그래서 1일 통상임금도 구해서 비교해요.</p>
+      <p class="formula">1일 통상임금 = 시급 × 1일 소정근로시간</p>
+      <p>시급제 알바의 1일 소정근로시간은 1주 소정근로시간을 통상 근로자의 주 근무일수(보통 5일)로 나눈 시간이에요. 주 20시간이면 4시간, 주 40시간이면 8시간이에요.</p>
+      <p>수당 없이 시급과 주휴수당만 받는 알바는 대부분 통상임금이 더 커요. 평균임금은 주말까지 포함한 달력 날짜로 나누고, 통상임금은 일하는 날 하루 기준이기 때문이에요. 주 20시간이면 한 주 임금 256,800원을 7일로 나눈 1일 평균임금은 약 36,686원인데, 1일 통상임금은 10,700원 × 4시간 = 42,800원이에요.</p>
+      <p>고용노동부는 이럴 때 통상임금으로 퇴직금을 계산해야 한다고 안내해요(<a href="https://www.moel.go.kr/minwon/fastcounsel/fastcounselView.do?inetDcssMngId=202408141036235340438">고용노동부 온라인 상담 답변</a>). 다만 평균임금이 실제 생활임금을 제대로 반영하고 있으면 단순 비교만으로 통상임금을 우선하지 않는다고 본 하급심 판결도 보도됐고, 대법원 판단은 아직 없어요. 그래서 회사가 평균임금으로 계산해 줄 수도 있어요. 이 글의 표와 계산기는 두 금액을 함께 보여 줘요.</p>
+      <p>반대로 야간·연장수당을 많이 받았다면 평균임금이 통상임금보다 커서 그대로 평균임금으로 계산해요.</p>
+
+      <h2>사례로 계산해 보기</h2>
+      <p>아래는 이해를 돕기 위해 만든 가상의 사례예요.</p>
+      <p>카페에서 일한 A씨는 2026년 3월 2일에 입사해 2027년 8월 31일까지 하루 5시간, 주 5일(주 25시간) 일했어요. 시급은 2026년에 10,320원, 2027년에 10,700원이었고, 퇴직 전 1년 동안 명절 상여금으로 모두 40만원을 받았어요.</p>
+      <ol class="steps">
+        <li><strong>조건 확인</strong>: 1년 넘게 일했고 주 25시간이라 받을 수 있어요.</li>
+        <li><strong>재직일수</strong>: 2026.3.2. ~ 2027.8.31. = 548일 (퇴직일은 9월 1일)</li>
+        <li><strong>산정 기간</strong>: 2027.6.1. ~ 8.31. = 92일</li>
+        <li><strong>3개월 임금</strong>: 한 주 321,000원(기본급 267,500원 + 주휴수당 53,500원) × 92일 ÷ 7일 = 4,218,857원</li>
+        <li><strong>상여금 가산</strong>: 400,000원 × 3/12 = 100,000원 → 합계 4,318,857원</li>
+        <li><strong>1일 평균임금</strong>: 4,318,857원 ÷ 92일 = 46,944.10원</li>
+        <li><strong>1일 통상임금</strong>: 10,700원 × 5시간 = 53,500원 (평균임금보다 커요)</li>
+        <li><strong>퇴직금</strong>: 53,500원 × 30일 × 548 ÷ 365 = <strong>2,409,699원</strong></li>
+      </ol>
+      <p>평균임금 46,944.10원으로 계산하면 2,114,414원이에요. 2026년 시급은 계산에 쓰이지 않아요. 퇴직금은 마지막 3개월 임금만 보기 때문이에요. A씨는 퇴직일인 9월 1일부터 14일 이내에 받아야 해요.</p>
+
+      <h2>2027년 근무시간별 퇴직금 (1년 근무)</h2>
+      <p>2027년 1월 1일부터 12월 31일까지 1년(365일) 동안 시급 10,700원(2027년 최저시급)으로 주 5일 일하고 주휴수당을 받은 경우예요. 상여금과 연장·야간수당은 없다고 봤어요. 작은 글씨는 계산에 쓴 1일 통상임금과 1일 평균임금이고, 고용노동부 안내대로라면 더 큰 통상임금 기준 금액을 받아요.</p>
+      <div class="table-scroll" role="region" aria-label="2027년 근무시간별 퇴직금 표" tabindex="0">
+        <table class="wage-table">
+          <thead>
+            <tr><th scope="col">1주 근무</th><th scope="col">통상임금 기준</th><th scope="col">평균임금 기준</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>14시간</td><td>대상 아님</td><td>대상 아님</td></tr>
+            <tr><td>15시간</td><td>963,000원<small>1일 32,100원</small></td><td>825,429원<small>1일 27,514원</small></td></tr>
+            <tr><td>20시간</td><td>1,284,000원<small>1일 42,800원</small></td><td>1,100,572원<small>1일 36,686원</small></td></tr>
+            <tr><td>25시간</td><td>1,605,000원<small>1일 53,500원</small></td><td>1,375,715원<small>1일 45,857원</small></td></tr>
+            <tr><td>30시간</td><td>1,926,000원<small>1일 64,200원</small></td><td>1,650,857원<small>1일 55,029원</small></td></tr>
+            <tr><td>40시간</td><td>2,568,000원<small>1일 85,600원</small></td><td>2,201,143원<small>1일 73,371원</small></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>1일 평균임금은 원 단위로 반올림해 적었어요(계산에는 전 단위까지 써요). 2년 일했다면 대략 두 배, 1년 6개월이면 약 1.5배예요. 주 40시간 근무자의 평균임금 기준 퇴직금(2,201,143원)은 월급 2,236,300원과 비슷해서 '1년에 한 달 치 월급'이라는 말이 여기서 나와요.</p>
+
+      <section class="card cta-card">
+        <h2>내 날짜로 계산해 보기</h2>
+        <p>입사일, 마지막 근무일, 주 근무시간, 시급만 넣으면 받을 수 있는지와 예상 퇴직금을 계산 과정까지 보여 줘요.</p>
+        <a class="primary-button" href="../severance-pay/">퇴직금 계산기로 계산하기</a>
+      </section>
+
+      <h2>언제까지, 어떻게 받나요</h2>
+      <p>회사는 퇴직한 날부터 <strong>14일 이내</strong>에 퇴직금을 줘야 해요. 특별한 사정이 있으면 서로 합의해서 지급일을 미룰 수 있어요(근로자퇴직급여 보장법 제9조 제1항). 마지막 달 월급이나 남은 수당도 같은 14일 기한이 적용돼요(근로기준법 제36조).</p>
+      <p>14일 안에 주지 않으면 그다음 날부터 실제로 줄 때까지 연 20%의 지연이자가 붙어요(근로기준법 제37조, 시행령 제17조).</p>
+      <p>퇴직금은 원칙적으로 내가 지정한 개인형퇴직연금(IRP) 계좌로 들어와요(같은 법 제9조 제2항). 55세 이후에 퇴직하거나 퇴직금이 300만원 이하인 경우 등은 IRP를 거치지 않고 받을 수 있어요(시행령 제3조의2, 고용노동부 고시 제2026-65호). 회사가 계좌를 물어보면 IRP 계좌를 만들어 알려 주세요.</p>
+
+      <h2>퇴직금을 못 받았을 때</h2>
+      <ol>
+        <li><strong>회사에 먼저 요청해요</strong>: 근로계약서, 급여명세서, 통장 입금 내역, 출퇴근 기록을 모아 두고, 계산한 금액과 근거를 문자나 메일로 남겨요.</li>
+        <li><strong>고용노동부에 진정을 내요</strong>: 14일이 지나도 주지 않으면 <a href="https://labor.moel.go.kr/">고용노동부 노동포털</a>에서 온라인으로 임금체불 진정을 내거나, 회사 주소지를 담당하는 지방고용노동관서에 찾아가 낼 수 있어요. 근로감독관이 사실을 조사하고 지급을 지도해요. 퇴직금을 기한 안에 주지 않는 건 처벌 대상이기도 해요(같은 법 제43조).</li>
+        <li><strong>3년 안에 해야 해요</strong>: 퇴직금을 받을 권리는 3년 동안 행사하지 않으면 시효로 사라져요(같은 법 제10조). 퇴직하고 시간이 지났다면 서두르세요.</li>
+      </ol>
+      <p>진행 방법이 헷갈리면 고용노동부 고객상담센터(국번 없이 1350)에 먼저 물어보면 돼요.</p>
+
+      <h2>쪼개기 계약, 5인 미만 사업장은요?</h2>
+      <h3>11개월씩 계약하면 퇴직금이 없나요?</h3>
+      <p>계약서를 11개월마다 새로 써도, 계약 사이에 공백이 거의 없고 같은 일을 계속했다면 처음 입사한 날부터 근로가 계속된 것으로 볼 수 있어요. 이렇게 인정되면 계약 기간을 모두 더해 1년이 넘는지 따져요. 반대로 계약이 끝난 뒤 한참 쉬었다가 다시 일했다면 따로 계산될 수 있어요. 어느 쪽인지는 공백 기간, 갱신 횟수, 업무 내용 같은 사정을 함께 보고 판단해요.</p>
+      <h3>계약을 주 14시간으로 쓰면요?</h3>
+      <p>퇴직금 조건은 근로계약서로 정한 소정근로시간을 4주 평균해서 봐요. 계약서에는 주 14시간으로 써 놓고 실제로는 처음부터 매주 정해진 대로 15시간 넘게 일했다면, 계약서 숫자가 아니라 실제로 정해진 근무시간이 무엇이었는지가 문제가 돼요. 근무표, 출퇴근 기록, 급여명세서를 모아 두세요.</p>
+      <h3>5인 미만 사업장도 줘야 하나요?</h3>
+      <p>네. 5인 미만 사업장은 연장·야간 가산수당이나 연차휴가 규정이 적용되지 않지만, 퇴직금은 똑같이 적용돼요. 다만 연차휴가가 없으니 연차수당 3/12 가산도 없어요.</p>
+
+      <h2>자주 묻는 질문</h2>
+      <details>
+        <summary>1년에서 하루 모자라면 퇴직금을 못 받나요?</summary>
+        <p>네. 계속근로기간이 1년 미만이면 법정 퇴직금 대상이 아니에요. 3월 2일에 입사했다면 다음 해 3월 1일까지 일해야 1년이에요. 퇴사 날짜를 정할 때 마지막 근무일을 꼭 확인하세요.</p>
+      </details>
+      <details>
+        <summary>퇴직금은 세금을 떼나요?</summary>
+        <p>퇴직금은 퇴직소득이라 퇴직소득세가 원천징수될 수 있어요. 금액과 근속연수에 따라 달라서, 이 글과 계산기의 금액은 세전이에요. 국세청 홈택스의 퇴직소득 세액계산 프로그램으로 확인할 수 있어요.</p>
+      </details>
+      <details>
+        <summary>퇴직금을 월급에 나눠서 미리 받았다고 하면 어떻게 되나요?</summary>
+        <p>퇴직금은 퇴직할 때 생기는 돈이에요. 퇴직 전에 미리 정산해 줄 수 있는 건 무주택자의 주택 구입처럼 법에 정한 사유로 근로자가 요구한 경우뿐이에요(근로자퇴직급여 보장법 제8조 제2항, 시행령 제3조). 그런 사유 없이 월급에 퇴직금이 들어 있다고 한 약정은 퇴직금을 준 것으로 인정받기 어려워요. 급여명세서와 계약서를 챙겨 고용노동부(1350)에 상담해 보세요.</p>
+      </details>
+      <details>
+        <summary>중간에 시급이 올랐으면 어떤 시급으로 계산하나요?</summary>
+        <p>퇴직 전 3개월 동안 실제로 받은 임금으로 계산해요. 2026년에 입사해 2027년에 퇴사하면 그 전의 시급과 상관없이 2027년 시급으로 받은 마지막 3개월 임금이 기준이에요.</p>
+      </details>
+      <details>
+        <summary>퇴직금을 못 받으면 언제까지 청구할 수 있나요?</summary>
+        <p>퇴직금을 받을 권리는 3년 동안 행사하지 않으면 시효로 사라져요(근로자퇴직급여 보장법 제10조). 퇴직하고 3년이 지나기 전에 고용노동부에 진정을 내거나 청구하세요.</p>
+      </details>
+
+      <p class="related-reading">함께 보기: <a href="../severance-pay/">퇴직금 계산기</a> · <a href="../weekly-holiday-pay/">2027 주휴수당 계산법</a> · <a href="../night-shift-pay/">2027 야간수당 계산법</a> · <a href="../minimum-wage-monthly/">2027 최저시급 월급 환산 (209시간)</a></p>
+    </article>
+
+    <footer class="footer">
+      <p>이 글은 일반적인 기준을 정리한 참고 자료예요. 실제 퇴직금은 근로계약, 급여 기록, 산정 기간에서 빼는 기간 등에 따라 달라질 수 있어요. 법률·세무 자문이 아니에요. 정확한 판단은 고용노동부 고객상담센터(국번 없이 1350)에 문의하세요.</p>
+      <p>기준: <a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제4조">근로자퇴직급여 보장법 제4조</a>·<a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제8조">제8조</a>·<a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제9조">제9조</a>·<a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제10조">제10조</a>, <a href="https://www.law.go.kr/법령/근로기준법/제2조">근로기준법 제2조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제36조">제36조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제37조">제37조</a>, <a href="https://www.law.go.kr/법령/근로기준법시행령/제2조">근로기준법 시행령 제2조</a>·<a href="https://www.law.go.kr/법령/근로기준법시행령/제6조">제6조</a>, <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산</a> · 마지막 업데이트 2026년 10월 17일</p>
+      <p><a href="../severance-pay/">퇴직금 계산기로 가기</a></p>
+      <nav class="footer-links" aria-label="사이트 정보">
+        <a href="/">홈</a>
+        <a href="/about.html">소개</a>
+        <a href="/about.html#contact">문의</a>
+        <a href="/privacy_policy.html"><strong>개인정보 처리방침</strong></a>
+      </nav>
+    </footer>
+  </main>
+</body>
+</html>

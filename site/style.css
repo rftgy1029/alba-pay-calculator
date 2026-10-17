@@ -229,6 +229,14 @@ html:has(.drawer[open]) {
   outline-offset: -2px;
 }
 
+/* 메뉴 안의 묶음 제목 (계산기, 사이트 정보) */
+.drawer-section {
+  margin: 16px 12px 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 /* 지금 테마 이름을 보여 준다. 누르면 반대 테마로 바뀐다. */
 .theme-toggle {
   display: inline-flex;
@@ -563,6 +571,22 @@ legend {
   font-size: 0.85rem;
 }
 
+/* 두 칸짜리 줄(.field-row) 아래에 붙는 설명 */
+.field-hint {
+  margin: -10px 0 16px;
+}
+
+/* 이름 옆의 '(선택)' 표시 */
+.optional {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* 날짜 입력칸: 다른 입력칸과 높이를 맞춘다 */
+.input-row input[type="date"] {
+  min-height: 48px;
+}
+
 .link-button {
   padding: 0;
   border: 0;
@@ -635,6 +659,16 @@ legend {
 
 .breakdown .total td {
   font-weight: 700;
+}
+
+/* 퇴직금 계산 과정: 왼쪽 설명이 길면 줄을 바꾸고 금액은 한 줄로 */
+.steps-table td:first-child {
+  overflow-wrap: anywhere;
+}
+
+.steps-table td:last-child {
+  padding-left: 12px;
+  white-space: nowrap;
 }
 
 .block-title {
@@ -710,6 +744,16 @@ legend {
 
 .content p {
   margin: 0 0 8px;
+}
+
+.help .content ul,
+.help .content ol {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+
+.help .content li {
+  margin-bottom: 4px;
 }
 
 .formula {

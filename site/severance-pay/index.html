@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>퇴직금 계산기 (알바·단시간) | 받는 조건·평균임금·예상 퇴직금 계산</title>
+  <meta name="description" content="입사일, 마지막 근무일, 주 근무시간, 시급만 넣으면 알바 퇴직금을 받을 수 있는지와 예상 금액을 계산해요. 평균임금, 재직일수, 통상임금 비교까지 계산 과정을 단계별로 보여 줘요.">
+  <link rel="canonical" href="https://rftgy1029.github.io/alba-pay-calculator/severance-pay/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rftgy1029.github.io/alba-pay-calculator/severance-pay/">
+  <meta property="og:title" content="퇴직금 계산기 - 알바도 1년, 주 15시간이면 받아요">
+  <meta property="og:description" content="받을 수 있는지, 평균임금과 재직일수로 얼마인지 단계별로 계산해요.">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="생활 계산기 모음">
+  <meta name="theme-color" content="#f5f7f6">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <meta name="google-adsense-account" content="ca-pub-1951051252794060">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1951051252794060" crossorigin="anonymous"></script>
+  <script>
+    // 저장해 둔 테마를 화면이 그려지기 전에 적용해서 깜빡임을 막는다.
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <script type="module" src="../theme.js"></script>
+  <script type="module" src="../menu.js"></script>
+  <script type="module" src="severance-app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "퇴직금 계산기",
+    "url": "https://rftgy1029.github.io/alba-pay-calculator/severance-pay/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko",
+    "description": "입사일, 마지막 근무일, 주 소정근로시간, 시급으로 퇴직금 지급 여부와 예상 금액을 계산하는 계산기",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "알바도 퇴직금을 받을 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. 같은 사업장에서 1년 이상 일했고, 4주 평균 1주 소정근로시간이 15시간 이상이면 알바·계약직·단시간근로자도 퇴직금을 받아요. 사업장 규모와 상관없이 5인 미만 사업장에도 적용돼요." }
+      },
+      {
+        "@type": "Question",
+        "name": "퇴사일은 마지막으로 일한 날인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "퇴직금 계산에서 퇴직일은 마지막으로 일한 날의 다음 날이에요. 그래서 계산기에는 마지막 근무일을 넣고, 퇴직일은 그다음 날로 계산해요. 3월 2일에 입사해 다음 해 3월 1일까지 일했다면 딱 1년이라 받을 수 있어요." }
+      },
+      {
+        "@type": "Question",
+        "name": "퇴직금은 언제까지 받아야 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "사용자는 퇴직한 날부터 14일 이내에 지급해야 해요. 특별한 사정이 있으면 당사자가 합의해서 날짜를 미룰 수 있어요. 늦게 주면 14일이 지난 다음 날부터 연 20%의 지연이자가 붙어요." }
+      },
+      {
+        "@type": "Question",
+        "name": "계산기 금액과 회사가 준 금액이 다르면 어떻게 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "먼저 회사가 쓴 3개월 임금 총액과 재직일수를 받아서 비교해 보세요. 이 계산기는 산정 기간에서 빼야 하는 휴업·출산휴가·육아휴직 기간 등을 반영하지 않고, 시급으로 추정한 임금은 실제와 다를 수 있어요. 차이가 풀리지 않으면 고용노동부 고객상담센터(국번 없이 1350)에 문의하세요." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="topbar">
+        <button type="button" id="menu-open" class="icon-button" aria-label="메뉴 열기" aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></svg>
+        </button>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="화면 테마 바꾸기">
+          <span class="when-light">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+            라이트
+          </span>
+          <span class="when-dark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            다크
+          </span>
+        </button>
+      </div>
+      <h1>퇴직금 계산기</h1>
+      <p class="lead">받을 수 있는지와 예상 퇴직금을 계산 과정까지 단계별로 보여 줘요.</p>
+    </header>
+
+    <dialog id="site-menu" class="drawer" aria-label="메뉴">
+      <div class="drawer-body">
+        <div class="drawer-head">
+          <p class="drawer-title">생활 계산기 모음</p>
+          <button type="button" class="icon-button drawer-close" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <nav aria-label="사이트 메뉴">
+          <ul class="drawer-links">
+            <li><a href="/">홈</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-calculators">계산기</p>
+          <ul class="drawer-links" aria-labelledby="menu-calculators">
+            <li><a href="/alba-pay-calculator/">알바 급여 계산기</a></li>
+            <li><a href="/alba-pay-calculator/severance-pay/" aria-current="page">퇴직금 계산기</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-articles">글</p>
+          <ul class="drawer-links" aria-labelledby="menu-articles">
+            <li><a href="/alba-pay-calculator/articles/">아티클</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-site">사이트 정보</p>
+          <ul class="drawer-links" aria-labelledby="menu-site">
+            <li><a href="/about.html">소개</a></li>
+            <li><a href="/about.html#contact">문의</a></li>
+            <li><a href="/privacy_policy.html">개인정보 처리방침</a></li>
+          </ul>
+        </nav>
+      </div>
+    </dialog>
+
+    <form id="calc" class="card" autocomplete="off">
+      <div class="field">
+        <label for="start">입사일</label>
+        <div class="input-row">
+          <input id="start" type="date" min="1990-01-01" max="2099-12-31" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="last">마지막 근무일</label>
+        <div class="input-row">
+          <input id="last" type="date" min="1990-01-01" max="2099-12-31" required aria-describedby="last-hint">
+        </div>
+        <p class="hint" id="last-hint">퇴직일은 마지막 근무일의 다음 날로 계산해요.</p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="hours">주 소정근로시간</label>
+          <div class="input-row">
+            <input id="hours" inputmode="decimal" maxlength="4" enterkeyhint="done" aria-describedby="hours-hint">
+            <span class="unit">시간</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="wage">시급</label>
+          <div class="input-row">
+            <input id="wage" inputmode="numeric" maxlength="7" enterkeyhint="done">
+            <span class="unit">원</span>
+          </div>
+        </div>
+      </div>
+      <p class="hint field-hint" id="hours-hint">근로계약서에 정한 1주 근무시간(4주 평균)이에요. 하루 4시간 × 주 5일이면 20시간. <button type="button" id="min-wage" class="link-button">최저시급 넣기</button></p>
+
+      <fieldset class="field">
+        <legend>퇴직 전 3개월 임금</legend>
+        <div class="segmented" style="--count: 2">
+          <span class="segmented-thumb" aria-hidden="true"></span>
+          <label><input type="radio" name="mode" value="estimate"><span>시급으로 추정</span></label>
+          <label><input type="radio" name="mode" value="direct"><span>직접 입력</span></label>
+        </div>
+        <p class="hint" id="mode-hint"></p>
+      </fieldset>
+
+      <div class="field" id="wages-field" hidden>
+        <label for="wages">3개월 임금 총액 (세전)</label>
+        <div class="input-row">
+          <input id="wages" inputmode="numeric" maxlength="11" enterkeyhint="done" aria-describedby="wages-hint">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint" id="wages-hint">급여명세서의 세전 금액(기본급, 주휴수당, 연장·야간수당 등)을 3개월치 더해 넣어요. 상여금과 연차수당은 아래에 따로 넣어요.</p>
+      </div>
+
+      <div class="field-row field-last">
+        <div class="field field-last">
+          <label for="bonus">연간 상여금 <small class="optional">(선택)</small></label>
+          <div class="input-row">
+            <input id="bonus" inputmode="numeric" maxlength="11" enterkeyhint="done" aria-describedby="extra-hint">
+            <span class="unit">원</span>
+          </div>
+        </div>
+        <div class="field field-last">
+          <label for="leave">연차수당 <small class="optional">(선택)</small></label>
+          <div class="input-row">
+            <input id="leave" inputmode="numeric" maxlength="11" enterkeyhint="done" aria-describedby="extra-hint">
+            <span class="unit">원</span>
+          </div>
+        </div>
+      </div>
+      <p class="hint" id="extra-hint">퇴직 전 1년 동안 받은 금액이에요. 3/12만 평균임금에 더해요.</p>
+    </form>
+
+    <section class="card result" aria-live="polite">
+      <p class="result-label" id="result-label">예상 퇴직금 (세전)</p>
+      <p class="result-amount" id="result-amount">계산 중…</p>
+      <p class="result-sub" id="result-sub"></p>
+      <h2 class="block-title">계산 과정</h2>
+      <table class="breakdown steps-table">
+        <tbody id="steps-body"></tbody>
+      </table>
+      <ul class="notes" id="notes"></ul>
+      <button type="button" id="share" class="primary-button">계산 결과 공유하기</button>
+      <p class="toast" id="toast" role="status" hidden></p>
+    </section>
+
+    <noscript>
+      <p class="card">계산기를 쓰려면 자바스크립트가 필요해요. 아래 계산 방법을 보고 직접 계산할 수도 있어요.</p>
+    </noscript>
+
+    <section class="help">
+      <article class="content">
+      <h2>퇴직금을 받는 조건</h2>
+      <p>근로자퇴직급여 보장법 제4조에 따라 아래 두 가지를 모두 채우면 받아요. 알바, 계약직, 단시간근로자도 똑같아요.</p>
+      <ol>
+        <li><strong>계속근로기간 1년 이상</strong>: 같은 사업장에서 1년 넘게 일했어야 해요. 3월 2일에 입사했다면 다음 해 3월 1일까지 일하면 딱 1년이에요.</li>
+        <li><strong>4주 평균 주 15시간 이상</strong>: 근로계약서에 정한 1주 근무시간(소정근로시간)을 4주 동안 평균해서 15시간 이상이어야 해요.</li>
+      </ol>
+      <p>상시 근로자 5인 미만 사업장에도 적용돼요. 다만 동거하는 친족만 고용한 사업과 가구 안에서 일하는 가사 근로는 제외예요(같은 법 제3조).</p>
+
+      <h2>퇴직금 계산 공식</h2>
+      <p class="formula">퇴직금 = 1일 평균임금 × 30일 × (재직일수 ÷ 365)</p>
+      <p>1년 일할 때마다 30일분의 평균임금을 받는다는 뜻이에요(같은 법 제8조). 계산기는 아래 순서로 계산해요.</p>
+
+      <h3>1. 재직일수</h3>
+      <p>입사일부터 마지막 근무일까지의 날 수예요. 퇴직일은 마지막 근무일의 다음 날이라, 퇴직일에서 입사일을 뺀 값과 같아요. 주말과 휴일도 모두 세요.</p>
+
+      <h3>2. 평균임금 산정 기간 (퇴직 전 3개월)</h3>
+      <p>퇴직일 3개월 전 같은 날부터 마지막 근무일까지예요. 퇴직일이 1월 1일이면 10월 1일~12월 31일(92일), 퇴직일이 5월 1일이면 2월 1일~4월 30일(평년 89일, 윤년 90일)이라 기간마다 일수가 달라요. 그 달에 같은 날이 없으면(5월 31일의 3개월 전) 그다음 달 1일부터 세요.</p>
+
+      <h3>3. 1일 평균임금</h3>
+      <p class="formula">1일 평균임금 = (3개월 임금 + 상여금 × 3/12 + 연차수당 × 3/12) ÷ 기간 일수</p>
+      <p>3개월 임금은 세전 금액이에요. 기본급뿐 아니라 주휴수당, 연장·야간수당처럼 일한 대가로 받은 돈을 모두 넣어요(근로기준법 제2조). 1년 동안 받은 상여금과 연차수당은 3개월치(3/12)만 더해요. 연차수당은 고용노동부 계산 예제처럼 퇴직 전 해에 쓰지 못한 연차를 돈으로 받은 금액을 넣어요.</p>
+
+      <h3>4. 1일 통상임금과 비교</h3>
+      <p class="formula">1일 통상임금 = 시급 × 1일 소정근로시간</p>
+      <p>근로기준법 제2조 제2항은 평균임금이 통상임금보다 적으면 통상임금을 평균임금으로 하라고 정해요. 시급제 알바의 1일 소정근로시간은 주 소정근로시간을 5일로 나눈 시간이에요(주 20시간이면 4시간, 하루 8시간이 상한). 계산기는 두 값 중 큰 값으로 퇴직금을 계산하고, 평균임금으로만 계산한 금액도 함께 보여 줘요.</p>
+      <p>평균임금은 주말을 포함한 달력 날짜로 나누고 통상임금은 일하는 날 하루 기준이라, 수당이 없는 시급제 알바는 대부분 통상임금이 더 커요. 고용노동부는 이때 통상임금으로 계산해야 한다고 안내하지만(<a href="https://www.moel.go.kr/minwon/fastcounsel/fastcounselView.do?inetDcssMngId=202408141036235340438">고용노동부 상담 사례</a>), 평균임금이 실제 생활임금을 제대로 반영하면 통상임금을 우선하지 않는다고 본 하급심 판결도 보도됐어요. 대법원 판단은 아직 없어서 회사가 평균임금 기준으로 계산하는 경우도 있어요.</p>
+
+      <h2>계산 예시</h2>
+      <h3>예시 1: 편의점 주 20시간, 1년 4개월</h3>
+      <p>2026년 9월 1일에 입사해 2027년 12월 31일까지 하루 4시간, 주 5일 일했어요. 시급은 2027년 최저시급 10,700원이에요.</p>
+      <ol class="steps">
+        <li>재직일수: 2026.9.1. ~ 2027.12.31. = 487일</li>
+        <li>산정 기간: 2027.10.1. ~ 12.31. = 92일</li>
+        <li>3개월 임금(추정): 한 주 256,800원(기본급 214,000원 + 주휴수당 42,800원) × 92일 ÷ 7일 = 3,375,086원</li>
+        <li>1일 평균임금: 3,375,086원 ÷ 92일 = 36,685.72원</li>
+        <li>1일 통상임금: 10,700원 × 4시간 = 42,800원 → 더 크니까 이 값을 써요</li>
+        <li>퇴직금: 42,800원 × 30일 × 487 ÷ 365 = <strong>1,713,173원</strong></li>
+      </ol>
+      <p>평균임금으로만 계산하면 1,468,434원이에요. 2026년에는 시급이 10,320원이었지만, 퇴직금은 마지막 3개월 임금만 보니까 2027년 시급으로 계산해요.</p>
+
+      <h3>예시 2: 야간 편의점 주 40시간, 2년</h3>
+      <p>2025년 12월 1일에 입사해 2027년 11월 30일까지 밤 근무(하루 8시간 중 7시간이 야간)를 했어요. 5인 이상 사업장이라 야간수당을 받아서 월급이 3,049,500원이었어요.</p>
+      <ol class="steps">
+        <li>재직일수: 730일, 산정 기간: 2027.9.1. ~ 11.30. = 91일</li>
+        <li>3개월 임금: 3,049,500원 × 3 = 9,148,500원</li>
+        <li>1일 평균임금: 9,148,500원 ÷ 91일 = 100,532.97원 (1일 통상임금 85,600원보다 커요)</li>
+        <li>퇴직금: 100,532.97원 × 30일 × 730 ÷ 365 = <strong>6,031,978원</strong></li>
+      </ol>
+      <p>야간·연장수당처럼 시급 말고도 받는 돈이 많으면 평균임금이 더 커져서 평균임금으로 계산해요.</p>
+
+      <h2>계산기에서 단순화한 부분</h2>
+      <ul>
+        <li><strong>산정 기간에서 빼는 기간</strong>: 수습 시작 후 3개월 이내, 회사 사정으로 쉰 휴업 기간, 출산전후휴가, 업무상 부상·질병 요양 기간, 육아휴직, 쟁의행위 기간은 3개월 기간과 임금에서 빼야 해요(근로기준법 시행령 제2조). 계산기는 이 기간을 빼지 않아요. 퇴직 전 3개월에 이런 기간이 있었다면 <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산기</a>로 계산해 보세요.</li>
+        <li><strong>재직일수에서 빼는 기간</strong>: 개인 휴직처럼 근속에서 빼기로 한 기간도 반영하지 않아요.</li>
+        <li><strong>시급으로 추정할 때</strong>: 주 소정근로시간만큼 일하고 주휴수당을 받은 것으로 계산해요. 연장·야간수당, 결근, 대타 근무는 넣지 않으니 실제 급여와 다르면 '직접 입력'을 쓰세요.</li>
+        <li><strong>1일 소정근로시간</strong>: 통상 근로자가 주 5일 일하는 사업장으로 보고 주 소정근로시간을 5로 나눠요.</li>
+        <li><strong>원 미만</strong>: 1일 평균임금은 전(0.01원) 단위에서 올리고 퇴직금은 원 단위에서 반올림해요. 고용노동부 계산기와 같은 방식이에요.</li>
+        <li><strong>세금</strong>: 세전 금액이에요. 퇴직소득세가 떼일 수 있어요.</li>
+      </ul>
+
+      <h2>언제, 어떻게 받나요</h2>
+      <p>회사는 퇴직한 날부터 <strong>14일 이내</strong>에 퇴직금을 줘야 해요. 특별한 사정이 있으면 서로 합의해서 날짜를 미룰 수 있어요(근로자퇴직급여 보장법 제9조). 늦어지면 14일이 지난 다음 날부터 연 20%의 지연이자가 붙어요(근로기준법 제37조, 시행령 제17조).</p>
+      <p>퇴직금은 원칙적으로 내가 지정한 개인형퇴직연금(IRP) 계좌로 들어와요. 55세 이후 퇴직하거나 퇴직금이 300만원 이하인 경우 등은 일반 통장으로 받을 수 있어요.</p>
+
+      <h2>자주 묻는 질문</h2>
+      <details open>
+        <summary>알바도 퇴직금을 받을 수 있나요?</summary>
+        <p>네. 같은 사업장에서 1년 이상 일했고, 4주 평균 1주 소정근로시간이 15시간 이상이면 알바·계약직·단시간근로자도 퇴직금을 받아요. 사업장 규모와 상관없이 5인 미만 사업장에도 적용돼요.</p>
+      </details>
+      <details open>
+        <summary>퇴사일은 마지막으로 일한 날인가요?</summary>
+        <p>퇴직금 계산에서 퇴직일은 마지막으로 일한 날의 다음 날이에요. 그래서 계산기에는 마지막 근무일을 넣고, 퇴직일은 그다음 날로 계산해요. 3월 2일에 입사해 다음 해 3월 1일까지 일했다면 딱 1년이라 받을 수 있어요.</p>
+      </details>
+      <details open>
+        <summary>퇴직금은 언제까지 받아야 하나요?</summary>
+        <p>사용자는 퇴직한 날부터 14일 이내에 지급해야 해요. 특별한 사정이 있으면 당사자가 합의해서 날짜를 미룰 수 있어요. 늦게 주면 14일이 지난 다음 날부터 연 20%의 지연이자가 붙어요.</p>
+      </details>
+      <details open>
+        <summary>계산기 금액과 회사가 준 금액이 다르면 어떻게 하나요?</summary>
+        <p>먼저 회사가 쓴 3개월 임금 총액과 재직일수를 받아서 비교해 보세요. 이 계산기는 산정 기간에서 빼야 하는 휴업·출산휴가·육아휴직 기간 등을 반영하지 않고, 시급으로 추정한 임금은 실제와 다를 수 있어요. 차이가 풀리지 않으면 고용노동부 고객상담센터(국번 없이 1350)에 문의하세요.</p>
+      </details>
+      </article>
+    </section>
+
+    <section class="related" aria-labelledby="related-title">
+      <h2 id="related-title">관련 글</h2>
+      <ul class="article-list">
+        <li>
+          <a class="card article-card" href="../severance-pay-guide/">
+            <h3>알바 퇴직금 계산법 (2027)</h3>
+            <p>받는 조건, 평균임금과 통상임금, 상여금 3/12 가산, 못 받았을 때 진정과 3년 시효까지 사례로 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../weekly-holiday-pay/">
+            <h3>2027 주휴수당 계산법</h3>
+            <p>주 15시간 조건과 개근 기준, 근무시간별 주휴수당 금액표를 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../minimum-wage-monthly/">
+            <h3>2027 최저시급 월급 환산 (209시간)</h3>
+            <p>시급 10,700원이 월급 2,236,300원이 되는 209시간 계산법과 근무시간별 월급표를 정리했어요.</p>
+          </a>
+        </li>
+      </ul>
+      <p class="related-more"><a href="../articles/">아티클 전체 보기</a></p>
+    </section>
+
+    <footer class="footer">
+      <p>계산 결과는 참고용이며, 실제 퇴직금은 근로계약, 급여 기록, 산정 기간에서 빼는 기간 등에 따라 달라질 수 있어요. 법률·세무 자문이 아니에요. 정확한 판단은 고용노동부 고객상담센터(국번 없이 1350)에 문의하세요.</p>
+      <p>기준: <a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제4조">근로자퇴직급여 보장법 제4조</a>·<a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제8조">제8조</a>·<a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제9조">제9조</a>, <a href="https://www.law.go.kr/법령/근로기준법/제2조">근로기준법 제2조</a>, <a href="https://www.law.go.kr/법령/근로기준법시행령/제2조">근로기준법 시행령 제2조</a>, <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산</a> · 마지막 업데이트 2026년 10월 17일</p>
+      <p><a href="../">알바 급여 계산기로 가기</a></p>
+      <nav class="footer-links" aria-label="사이트 정보">
+        <a href="/">홈</a>
+        <a href="/about.html">소개</a>
+        <a href="/about.html#contact">문의</a>
+        <a href="/privacy_policy.html"><strong>개인정보 처리방침</strong></a>
+      </nav>
+    </footer>
+  </main>
+</body>
+</html>
