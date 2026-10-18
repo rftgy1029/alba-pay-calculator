@@ -1,9 +1,10 @@
-// test/pay_calculator_test.dart 와 같은 기준값으로 웹 계산 로직을 확인한다. 퇴직금(severance.js), 실업급여(unemployment.js), 연차수당(annual-leave.js)은 웹에만 있다.
+// test/pay_calculator_test.dart 와 같은 기준값으로 웹 계산 로직을 확인한다. 퇴직금(severance.js), 실업급여(unemployment.js), 해고예고수당(dismissal-notice.js), 연차수당(annual-leave.js)은 웹에만 있다.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { YEARS, autoDeduction, calculatePay, defaultYear, formatWon } from './calc.js';
-import { calculateSeverance, parseDate } from './severance.js';
+import { calculateDismissalNotice, monthsCompletedOn } from './dismissal-notice.js';
+import { calculateSeverance, formatDate, parseDate } from './severance.js';
 import { benefitDaysFor, calculateUnemployment, lowerLimitFor, upperLimitFor } from './unemployment.js';
 import { addMonths, annualDaysFor, calculateAnnualLeave, leaveHoursFor } from './annual-leave.js';
 
@@ -641,6 +642,156 @@ test('실업급여 설명 글의 사례와 하한 표', () => {
   assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 16 }).lowerLimit, 34240);
   assert.equal(lowerLimitFor('2026-12-31', 8), 66048);
   assert.equal(upperLimitFor('2027-12-31'), 68100);
+});
+
+const dismissal = (overrides) =>
+  calculateDismissalNotice({ weeklyHours: 20, hourlyWage: 10700, ...overrides });
+
+test('해고예고: 3개월 되는 날은 민법대로 (같은 날 전날, 없으면 그 달 말일)', () => {
+  const completed = (start) => formatDate(monthsCompletedOn(parseDate(start), 3));
+  assert.equal(completed('2027-01-01'), '2027-03-31');
+  assert.equal(completed('2027-03-02'), '2027-06-01');
+  assert.equal(completed('2027-01-31'), '2027-04-30');
+  assert.equal(completed('2026-11-30'), '2027-02-28');
+  assert.equal(completed('2027-11-30'), '2028-02-29');
+  assert.equal(completed('2027-10-15'), '2028-01-14');
+});
+
+test('해고예고: 1월 1일 입사, 3월 31일까지 일하면 3개월 미만이 아님 (법제처 21-0320)', () => {
+  const march31 = dismissal({ startDate: '2027-01-01', noticeDate: '2027-03-31', lastWorkDate: '2027-03-31' });
+  assert.equal(march31.underThreeMonths, false);
+  assert.equal(march31.owed, true);
+  assert.equal(march31.pay, 1284000);
+
+  const march30 = dismissal({ startDate: '2027-01-01', noticeDate: '2027-03-30', lastWorkDate: '2027-03-30' });
+  assert.equal(march30.underThreeMonths, true);
+  assert.equal(march30.exception, 'underThreeMonths');
+  assert.equal(march30.pay, 0);
+  assert.equal(march30.payIfOwed, 1284000);
+
+  // 2개월째에 예고해도 그만두는 날에 3개월이 넘으면 예외가 아님 (근로기준정책과-993)
+  const later = dismissal({ startDate: '2027-01-01', noticeDate: '2027-03-01', lastWorkDate: '2027-04-10' });
+  assert.equal(later.underThreeMonths, false);
+  assert.equal(later.noticeDays, 40);
+  assert.equal(later.pay, 0);
+});
+
+test('해고예고: 예고 기간은 통보 다음 날부터 역일로 30일 (근기 68207-1346)', () => {
+  const kept = dismissal({ startDate: '2027-01-01', noticeDate: '2027-09-01', lastWorkDate: '2027-10-01' });
+  assert.equal(kept.noticeDays, 30);
+  assert.equal(kept.noticeKept, true);
+  assert.equal(kept.pay, 0);
+  assert.equal(kept.retireDate, '2027-10-02');
+
+  // 하루라도 모자라면 모자란 날만큼이 아니라 30일분 전부
+  const oneShort = dismissal({ startDate: '2027-01-01', noticeDate: '2027-09-01', lastWorkDate: '2027-09-30' });
+  assert.equal(oneShort.noticeDays, 29);
+  assert.equal(oneShort.shortBy, 1);
+  assert.equal(oneShort.pay, 1284000);
+  assert.equal(oneShort.latestNoticeDate, '2027-08-31');
+  assert.equal(oneShort.earliestLastDate, '2027-10-01');
+
+  // 마지막 근무일 뒤에 통보했으면 0일
+  const after = dismissal({ startDate: '2027-01-01', noticeDate: '2027-09-05', lastWorkDate: '2027-09-01' });
+  assert.equal(after.noticeDays, 0);
+  assert.equal(after.pay, 1284000);
+});
+
+test('해고예고: 해고가 아니거나 예외 사유면 수당 없음, 5인 미만도 금액은 같음', () => {
+  const base = { startDate: '2027-01-01', noticeDate: '2027-09-17', lastWorkDate: '2027-09-17' };
+  assert.equal(dismissal({ ...base, leaveType: 'expiry' }).exception, 'expiry');
+  assert.equal(dismissal({ ...base, leaveType: 'expiry' }).pay, 0);
+  assert.equal(dismissal({ ...base, leaveType: 'resignation' }).pay, 0);
+  assert.equal(dismissal({ ...base, disaster: true }).exception, 'disaster');
+  assert.equal(dismissal({ ...base, misconduct: true }).exception, 'misconduct');
+  assert.equal(dismissal({ ...base, misconduct: true }).pay, 0);
+  assert.equal(dismissal({ ...base, smallBusiness: true }).pay, 1284000);
+  // 주 15시간 미만도 해고예고는 적용
+  assert.equal(dismissal({ ...base, weeklyHours: 14 }).pay, 898800);
+});
+
+test('해고예고: 1일 소정근로시간은 주 소정근로시간 ÷ 5, 직접 넣으면 그 값 (8시간 상한)', () => {
+  const base = { startDate: '2027-01-01', noticeDate: '2027-09-17', lastWorkDate: '2027-09-17' };
+  assert.equal(dismissal({ ...base, weeklyHours: 18 }).dailyHours, 3.6);
+  assert.equal(dismissal({ ...base, weeklyHours: 18 }).dailyOrdinary, 38520);
+  assert.equal(dismissal({ ...base, weeklyHours: 52 }).dailyHours, 8);
+  const custom = dismissal({ ...base, weeklyHours: 18, dailyHours: 6 });
+  assert.equal(custom.usesCustomHours, true);
+  assert.equal(custom.pay, 1926000);
+  assert.equal(dismissal({ ...base, dailyHours: 10 }).dailyHours, 8);
+  assert.equal(dismissal({ ...base, weeklyHours: 22.5 }).pay, 1444500);
+});
+
+test('해고예고: 날짜가 없거나 순서가 바뀌면 계산하지 않음', () => {
+  assert.equal(dismissal({ startDate: '', noticeDate: '2027-09-01', lastWorkDate: '2027-09-01' }).valid, false);
+  assert.equal(dismissal({ startDate: '2027-09-02', noticeDate: '2027-09-01', lastWorkDate: '2027-09-03' }).valid, false);
+  assert.equal(dismissal({ startDate: '2027-09-02', noticeDate: '2027-09-02', lastWorkDate: '2027-09-01' }).valid, false);
+  assert.equal(dismissal({ startDate: '2027-02-30', noticeDate: '2027-09-01', lastWorkDate: '2027-09-01' }).valid, false);
+});
+
+// dismissal-notice-pay/index.html 의 예시가 계산기 결과와 같아야 한다.
+test('해고예고수당 계산기 페이지의 예시', () => {
+  const store = dismissal({ startDate: '2027-03-02', noticeDate: '2027-10-15', lastWorkDate: '2027-10-15' });
+  assert.equal(store.threeMonthDate, '2027-06-01');
+  assert.equal(store.noticeDays, 0);
+  assert.equal(store.dailyHours, 4);
+  assert.equal(store.dailyOrdinary, 42800);
+  assert.equal(store.pay, 1284000);
+
+  const twenty = dismissal({ startDate: '2027-01-04', noticeDate: '2027-11-10', lastWorkDate: '2027-11-30', weeklyHours: 25 });
+  assert.equal(twenty.noticeDays, 20);
+  assert.equal(twenty.shortBy, 10);
+  assert.equal(twenty.dailyOrdinary, 53500);
+  assert.equal(twenty.pay, 1605000);
+  assert.equal(twenty.latestNoticeDate, '2027-10-31');
+
+  const short = dismissal({ startDate: '2027-08-01', noticeDate: '2027-10-20', lastWorkDate: '2027-10-20' });
+  assert.equal(short.threeMonthDate, '2027-10-31');
+  assert.equal(short.exception, 'underThreeMonths');
+  assert.equal(short.pay, 0);
+});
+
+// dismissal-notice-guide/index.html 의 사례와 금액표가 계산기 결과와 같아야 한다.
+test('해고예고수당 설명 글의 사례와 금액표', () => {
+  const kakao = dismissal({ startDate: '2026-12-01', noticeDate: '2027-06-10', lastWorkDate: '2027-06-13', weeklyHours: 18 });
+  assert.equal(kakao.threeMonthDate, '2027-02-28');
+  assert.equal(kakao.noticeDays, 3);
+  assert.equal(kakao.shortBy, 27);
+  assert.equal(kakao.dailyHours, 3.6);
+  assert.equal(kakao.dailyOrdinary, 38520);
+  assert.equal(kakao.pay, 1155600);
+
+  const tomorrow = dismissal({ startDate: '2027-02-01', noticeDate: '2027-09-17', lastWorkDate: '2027-09-17', weeklyHours: 40 });
+  assert.equal(tomorrow.noticeDays, 0);
+  assert.equal(tomorrow.dailyOrdinary, 85600);
+  assert.equal(tomorrow.pay, 2568000);
+  assert.equal(calculatePay({ year: 2027, hourlyWage: 10700, hoursPerDay: 8, daysPerWeek: 5 }).monthly.gross, 2236300);
+
+  const almost = dismissal({ startDate: '2027-04-15', noticeDate: '2027-07-10', lastWorkDate: '2027-07-10' });
+  assert.equal(almost.threeMonthDate, '2027-07-14');
+  assert.equal(almost.underThreeMonths, true);
+  assert.equal(dismissal({ startDate: '2027-04-15', noticeDate: '2027-07-14', lastWorkDate: '2027-07-14' }).owed, true);
+
+  // 예고 기간 예시: 9월 1일 통보 → 10월 1일까지, 11월 30일까지 일하게 하려면 10월 31일까지 통보
+  assert.equal(dismissal({ startDate: '2027-01-01', noticeDate: '2027-09-01', lastWorkDate: '2027-09-01' }).earliestLastDate, '2027-10-01');
+  assert.equal(dismissal({ startDate: '2027-01-01', noticeDate: '2027-11-30', lastWorkDate: '2027-11-30' }).latestNoticeDate, '2027-10-31');
+
+  // 금액표: 주 소정근로시간 → 1일 통상임금 → 해고예고수당
+  const rows = [
+    [14, 2.8, 29960, 898800],
+    [15, 3, 32100, 963000],
+    [20, 4, 42800, 1284000],
+    [25, 5, 53500, 1605000],
+    [30, 6, 64200, 1926000],
+    [35, 7, 74900, 2247000],
+    [40, 8, 85600, 2568000],
+  ];
+  for (const [weeklyHours, hours, daily, pay] of rows) {
+    const result = dismissal({ startDate: '2027-01-01', noticeDate: '2027-09-17', lastWorkDate: '2027-09-17', weeklyHours });
+    assert.equal(result.dailyHours, hours);
+    assert.equal(result.dailyOrdinary, daily);
+    assert.equal(result.pay, pay);
+  }
 });
 
 const annualLeave = (overrides) => calculateAnnualLeave({ weeklyHours: 20, hourlyWage: 10700, ...overrides });

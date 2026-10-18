@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>해고예고수당 계산기 (알바·단시간) | 30일 전 통보·예외·30일분 통상임금 계산</title>
+  <meta name="description" content="입사일, 해고 통보일, 마지막 근무일, 주 근무시간, 시급만 넣으면 30일 전에 예고했는지, 3개월 미만 같은 예외인지, 받을 해고예고수당이 얼마인지 계산 과정까지 보여 줘요. 5인 미만 사업장도 적용돼요.">
+  <link rel="canonical" href="https://rftgy1029.github.io/alba-pay-calculator/dismissal-notice-pay/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rftgy1029.github.io/alba-pay-calculator/dismissal-notice-pay/">
+  <meta property="og:title" content="해고예고수당 계산기 - 30일 전에 안 알렸다면 30일분">
+  <meta property="og:description" content="예고 기간, 3개월 예외, 1일 통상임금 × 30일까지 단계별로 계산해요.">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="생활 계산기 모음">
+  <meta name="theme-color" content="#f5f7f6">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <meta name="google-adsense-account" content="ca-pub-1951051252794060">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1951051252794060" crossorigin="anonymous"></script>
+  <script>
+    // 저장해 둔 테마를 화면이 그려지기 전에 적용해서 깜빡임을 막는다.
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <script type="module" src="../theme.js"></script>
+  <script type="module" src="../menu.js"></script>
+  <script type="module" src="dismissal-notice-app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "해고예고수당 계산기",
+    "url": "https://rftgy1029.github.io/alba-pay-calculator/dismissal-notice-pay/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko",
+    "description": "입사일, 해고 통보일, 마지막 근무일, 주 소정근로시간, 시급으로 해고예고 위반 여부와 해고예고수당을 계산하는 계산기",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "20일 전에 해고 통보를 받았으면 10일분만 받나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. 고용노동부는 예고 기간이 30일에서 일부라도 모자라면 30일 전에 예고하지 않은 것으로 보고, 30일분 이상의 통상임금을 줘야 한다고 해석해요(근기 68207-1346, 2003.10.20.). 모자란 날만큼이 아니라 30일분 전부예요." }
+      },
+      {
+        "@type": "Question",
+        "name": "알바도 해고예고수당을 받을 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. 근로자라면 알바, 단시간근로자, 계약직도 받아요. 주 15시간 미만이어도 해고예고 규정은 적용되고, 상시 5명 미만 사업장에도 적용돼요. 다만 계속 일한 기간이 3개월 미만이면 받을 수 없어요." }
+      },
+      {
+        "@type": "Question",
+        "name": "해고예고수당은 언제 받아야 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "고용노동부는 해고예고수당을 퇴직 후 14일 이내가 아니라 해고와 동시에 지급해야 한다고 안내해요. 따로 신청하지 않아도 회사가 줘야 하는 돈이에요." }
+      },
+      {
+        "@type": "Question",
+        "name": "말이나 문자로 해고를 알려도 예고가 되나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "해고예고는 방법이 정해져 있지 않아서 말로 해도 효력이 있다는 것이 고용노동부 해석이에요(근로개선정책과-5318). 다만 언제 해고되는지 날짜를 알 수 있게 해야 해요(대법원 2009도13833). 5명 이상 사업장은 이와 별도로 해고 사유와 시기를 서면으로 알려야 해고가 효력이 있어요(근로기준법 제27조)." }
+      },
+      {
+        "@type": "Question",
+        "name": "1일 통상임금은 하루 근무시간으로 계산하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "시급제 단시간근로자는 근로기준법 시행령 별표 2에 따라 4주 소정근로시간을 그 기간 통상 근로자의 소정근로일수로 나눈 시간을 1일 소정근로시간으로 봐요. 통상 근로자가 주 5일 일하면 주 소정근로시간 ÷ 5예요. 주 3일 하루 6시간(주 18시간)이면 6시간이 아니라 3.6시간이에요." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="topbar">
+        <button type="button" id="menu-open" class="icon-button" aria-label="메뉴 열기" aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></svg>
+        </button>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="화면 테마 바꾸기">
+          <span class="when-light">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+            라이트
+          </span>
+          <span class="when-dark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            다크
+          </span>
+        </button>
+      </div>
+      <h1>해고예고수당 계산기</h1>
+      <p class="lead">30일 전에 예고했는지, 예외에 해당하는지, 받을 금액이 얼마인지 계산 과정까지 단계별로 보여 줘요.</p>
+    </header>
+
+    <dialog id="site-menu" class="drawer" aria-label="메뉴">
+      <div class="drawer-body">
+        <div class="drawer-head">
+          <p class="drawer-title">생활 계산기 모음</p>
+          <button type="button" class="icon-button drawer-close" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <nav aria-label="사이트 메뉴">
+          <ul class="drawer-links">
+            <li><a href="/">홈</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-calculators">계산기</p>
+          <ul class="drawer-links" aria-labelledby="menu-calculators">
+            <li><a href="/alba-pay-calculator/">알바 급여 계산기</a></li>
+            <li><a href="/alba-pay-calculator/severance-pay/">퇴직금 계산기</a></li>
+            <li><a href="/alba-pay-calculator/unemployment-benefit/">실업급여 계산기</a></li>
+            <li><a href="/alba-pay-calculator/dismissal-notice-pay/" aria-current="page">해고예고수당 계산기</a></li>
+            <li><a href="/alba-pay-calculator/annual-leave-pay/">연차수당 계산기</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-articles">글</p>
+          <ul class="drawer-links" aria-labelledby="menu-articles">
+            <li><a href="/alba-pay-calculator/articles/">아티클</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-site">사이트 정보</p>
+          <ul class="drawer-links" aria-labelledby="menu-site">
+            <li><a href="/about.html">소개</a></li>
+            <li><a href="/about.html#contact">문의</a></li>
+            <li><a href="/privacy_policy.html">개인정보 처리방침</a></li>
+          </ul>
+        </nav>
+      </div>
+    </dialog>
+
+    <form id="calc" class="card" autocomplete="off">
+      <fieldset class="field">
+        <legend>어떻게 그만두나요?</legend>
+        <div class="segmented" style="--count: 3">
+          <span class="segmented-thumb" aria-hidden="true"></span>
+          <label><input type="radio" name="type" value="dismissal"><span>해고</span></label>
+          <label><input type="radio" name="type" value="expiry"><span>계약 만료</span></label>
+          <label><input type="radio" name="type" value="resignation"><span>사직</span></label>
+        </div>
+        <p class="hint" id="type-hint"></p>
+      </fieldset>
+
+      <div class="field">
+        <label for="start">입사일</label>
+        <div class="input-row">
+          <input id="start" type="date" min="1990-01-01" max="2099-12-31" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="notice">해고 통보일</label>
+        <div class="input-row">
+          <input id="notice" type="date" min="1990-01-01" max="2099-12-31" required aria-describedby="notice-hint">
+        </div>
+        <p class="hint" id="notice-hint">해고한다는 말을 들은 날이에요. 말, 문자, 카톡 모두 포함해요. 예고 없이 바로 해고됐다면 마지막 근무일과 같은 날을 넣어요.</p>
+      </div>
+      <div class="field">
+        <label for="last">마지막 근무일</label>
+        <div class="input-row">
+          <input id="last" type="date" min="1990-01-01" max="2099-12-31" required aria-describedby="last-hint">
+        </div>
+        <p class="hint" id="last-hint">근로관계가 끝나는 마지막 날이에요. "내일부터 나오지 마"라는 말을 들었다면 그날이에요. 해고일(퇴직일)은 그다음 날이에요.</p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="hours">주 소정근로시간</label>
+          <div class="input-row">
+            <input id="hours" inputmode="decimal" maxlength="4" enterkeyhint="done" aria-describedby="hours-hint">
+            <span class="unit">시간</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="wage">시급</label>
+          <div class="input-row">
+            <input id="wage" inputmode="numeric" maxlength="7" enterkeyhint="done">
+            <span class="unit">원</span>
+          </div>
+        </div>
+      </div>
+      <p class="hint field-hint" id="hours-hint">근로계약서에 정한 1주 근무시간이에요. 하루 4시간 × 주 5일이면 20시간. <button type="button" id="min-wage" class="link-button">최저시급 넣기</button></p>
+
+      <div class="field">
+        <label for="daily">1일 소정근로시간 <small class="optional">(선택)</small></label>
+        <div class="input-row">
+          <input id="daily" inputmode="decimal" maxlength="4" enterkeyhint="done" placeholder="자동" aria-describedby="daily-hint">
+          <span class="unit">시간</span>
+        </div>
+        <p class="hint" id="daily-hint"></p>
+      </div>
+
+      <div id="exceptions">
+        <label class="switch-row">
+          <span>
+            <strong>천재·사변 등으로 사업을 계속할 수 없어요</strong>
+            <small>사업을 계속하는 것 자체가 불가능해야 해요(제26조 제2호).</small>
+          </span>
+          <input type="checkbox" id="disaster" role="switch">
+        </label>
+        <label class="switch-row">
+          <span>
+            <strong>내가 고의로 큰 손해를 끼쳤어요</strong>
+            <small>횡령, 기밀 유출, 제품 절도, 기물 파손 등 시행규칙 별표 1의 사유예요(제26조 제3호).</small>
+          </span>
+          <input type="checkbox" id="misconduct" role="switch">
+        </label>
+      </div>
+
+      <fieldset class="field field-last">
+        <legend>사업장 규모 (상시 근로자)</legend>
+        <div class="segmented" style="--count: 2">
+          <span class="segmented-thumb" aria-hidden="true"></span>
+          <label><input type="radio" name="size" value="large"><span>5명 이상</span></label>
+          <label><input type="radio" name="size" value="small"><span>5명 미만</span></label>
+        </div>
+        <p class="hint">해고예고는 두 경우 모두 똑같이 적용돼요. 함께 알아 둘 규정만 달라져요.</p>
+      </fieldset>
+    </form>
+
+    <section class="card result" aria-live="polite">
+      <p class="result-label" id="result-label">받을 해고예고수당 (세전)</p>
+      <p class="result-amount" id="result-amount">계산 중…</p>
+      <p class="result-sub" id="result-sub"></p>
+      <h2 class="block-title">계산 과정</h2>
+      <table class="breakdown steps-table">
+        <tbody id="steps-body"></tbody>
+      </table>
+      <ul class="notes" id="notes"></ul>
+      <button type="button" id="share" class="primary-button">계산 결과 공유하기</button>
+      <p class="toast" id="toast" role="status" hidden></p>
+    </section>
+
+    <noscript>
+      <p class="card">계산기를 쓰려면 자바스크립트가 필요해요. 아래 계산 방법을 보고 직접 계산할 수도 있어요.</p>
+    </noscript>
+
+    <section class="help">
+      <article class="content">
+      <h2>해고예고수당을 받는 조건</h2>
+      <p>근로기준법 제26조는 회사가 근로자를 해고하려면 <strong>적어도 30일 전에 예고</strong>하고, 30일 전에 예고하지 않았다면 <strong>30일분 이상의 통상임금</strong>을 주라고 정해요. 이 돈을 해고예고수당이라고 해요. 아래를 모두 채우면 받아요.</p>
+      <ol>
+        <li><strong>해고여야 해요</strong>: 회사가 내 뜻과 상관없이 일방적으로 근로관계를 끝낸 경우예요. 스스로 그만두거나 권고사직에 동의한 경우, 정해진 계약기간이 끝난 경우는 해고가 아니에요.</li>
+        <li><strong>30일 전에 예고받지 못했어요</strong>: 예고 기간은 통보한 날을 빼고 다음 날부터 달력 날짜로 30일이에요. 하루라도 모자라면 예고하지 않은 것으로 봐요.</li>
+        <li><strong>예외에 해당하지 않아요</strong>: 계속 일한 기간이 3개월 미만이거나, 천재·사변 등으로 사업을 계속할 수 없거나, 근로자가 고의로 큰 손해를 끼친 경우(시행규칙 별표 1)는 받을 수 없어요.</li>
+      </ol>
+      <p>알바, 단시간근로자, 계약직도 똑같이 적용돼요. 주 15시간 미만이라 주휴수당이 없는 사람도 해고예고 규정은 적용돼요(근로기준법 제18조 제3항은 휴일·연차만 빼요). 상시 근로자 5명 미만 사업장에도 적용돼요(근로기준법 시행령 별표 1).</p>
+
+      <h2>계산 공식</h2>
+      <p class="formula">해고예고수당 = 1일 통상임금 × 30일</p>
+      <p class="formula">1일 통상임금 = 시급 × 1일 소정근로시간</p>
+      <p>통상임금을 일급으로 구할 때는 시간급에 1일 소정근로시간을 곱해요(근로기준법 시행령 제6조 제3항). 시급제 단시간근로자의 1일 소정근로시간은 4주 동안의 소정근로시간을 그 기간 통상 근로자의 총 소정근로일수로 나눈 시간이에요(시행령 별표 2). 통상 근로자가 주 5일 일한다면 <strong>주 소정근로시간 ÷ 5</strong>예요. 고용노동부도 단시간근로자의 해고예고수당은 이 기준으로 산정하라고 회신했어요(근로기준과-470, 2004.1.29.).</p>
+      <p>그래서 주 3일 하루 6시간(주 18시간) 일하는 알바의 1일 소정근로시간은 6시간이 아니라 18 ÷ 5 = 3.6시간이에요. 하루 일한 시간 × 30일로 계산하면 더 많아 보이지만 법이 정한 방식과 달라요.</p>
+
+      <h3>예고 기간 세는 법</h3>
+      <p>고용노동부는 해고예고 기간 30일을 <strong>역일(달력 날짜)</strong>로 세고, 민법의 원칙에 따라 <strong>예고한 날은 빼고</strong> 센다고 봐요(근기 68207-1346, 2003.10.20.). 그래서 9월 1일에 알렸다면 9월 2일부터 30일째인 10월 1일까지 근로관계가 이어져야 예고를 지킨 거예요. 계산기는 통보 다음 날부터 마지막 근무일까지의 날 수가 30일 이상인지 봐요.</p>
+
+      <h3>3개월 미만인지 보는 법</h3>
+      <p>계속 일한 기간이 3개월 미만이면 예외예요. 3개월은 입사일부터 달력으로 세요. 1월 1일에 입사했다면 3월 31일이 3개월 되는 날이라, 3월 31일까지 일했으면 3개월 미만이 아니에요(법제처 법령해석 21-0320, 고용노동부 근로기준정책과-1330). 해고를 알린 날이 아니라 근로관계가 끝나는 날을 기준으로 봐요(근로기준정책과-993).</p>
+
+      <h2>계산 예시</h2>
+      <h3>예시 1: "내일부터 나오지 마" (주 20시간)</h3>
+      <p>2027년 3월 2일에 입사해 편의점에서 하루 4시간, 주 5일 일했어요. 시급은 2027년 최저시급 10,700원이에요. 2027년 10월 15일 근무가 끝난 뒤 "내일부터 나오지 마"라는 말을 들었어요.</p>
+      <ol class="steps">
+        <li>그만두는 방식: 회사가 일방적으로 끝냈으니 해고예요.</li>
+        <li>3개월 되는 날: 2027.6.1. → 10월 15일까지 일했으니 채웠어요.</li>
+        <li>예고 기간: 통보일과 마지막 근무일이 같아서 0일 → 30일이 모자라요.</li>
+        <li>1일 통상임금: 10,700원 × (20시간 ÷ 5 = 4시간) = 42,800원</li>
+        <li>해고예고수당: 42,800원 × 30일 = <strong>1,284,000원</strong></li>
+      </ol>
+
+      <h3>예시 2: 20일 전에 통보 (주 25시간)</h3>
+      <p>2027년 1월 4일에 입사해 하루 5시간, 주 5일 일했어요. 2027년 11월 10일에 "11월 30일까지만 일해 달라"는 통보를 받았어요.</p>
+      <ol class="steps">
+        <li>예고 기간: 11월 11일~30일 = 20일 → 10일이 모자라요.</li>
+        <li>1일 통상임금: 10,700원 × 5시간 = 53,500원</li>
+        <li>해고예고수당: 53,500원 × 30일 = <strong>1,605,000원</strong> (모자란 10일분이 아니라 30일분 전부예요)</li>
+      </ol>
+      <p>30일 예고를 지키려면 회사는 늦어도 10월 31일에 알렸어야 해요. 11월 30일까지 일한 날의 임금은 해고예고수당과 별개로 받아요.</p>
+
+      <h3>예시 3: 3개월이 안 된 경우</h3>
+      <p>2027년 8월 1일에 입사해 10월 20일에 바로 해고됐어요. 3개월 되는 날은 10월 31일인데 그 전에 근로관계가 끝나서 해고예고 예외(제26조 제1호)에 해당해요. 해고예고수당은 없지만, 해고가 정당한지는 별개의 문제예요.</p>
+
+      <h2>계산기에서 단순화한 부분</h2>
+      <ul>
+        <li><strong>1일 소정근로시간</strong>: 통상 근로자가 주 5일 일하는 사업장으로 보고 주 소정근로시간을 5로 나눠요(하루 8시간 상한). 사업장의 통상 근로자 근무일수가 다르거나 계약서에 1일 소정근로시간이 따로 정해져 있다면 '1일 소정근로시간'에 직접 넣으세요.</li>
+        <li><strong>통상임금</strong>: 시급만으로 계산해요. 직책수당처럼 정기적·일률적으로 주는 고정 수당이 있으면 통상임금에 들어갈 수 있어서 금액이 더 커져요. 법은 '30일분 이상'이라 회사가 더 줄 수는 있어요.</li>
+        <li><strong>예외 사유</strong>: 천재·사변이나 근로자 귀책 사유에 해당하는지는 실제 사정을 보고 판단해요. 스위치는 해당한다고 가정했을 때의 결과만 보여 줘요.</li>
+        <li><strong>해고인지</strong>: 해고, 계약 만료, 사직은 직접 고른 대로 계산해요. 계약이 여러 번 갱신돼 기간이 형식에 불과했거나, 사직서를 강요받았다면 해고로 볼 수 있어서 고용노동부 상담이 필요해요.</li>
+        <li><strong>원 미만</strong>: 1일 통상임금은 전(0.01원)까지, 해고예고수당은 원 단위에서 반올림해요.</li>
+        <li><strong>세금</strong>: 세전 금액이에요. 국세청은 근로기준법 제26조에 따라 받는 해고예고수당을 퇴직소득으로 보고 있어요(서면-2024-원천-1611).</li>
+      </ul>
+
+      <h2>언제, 어떻게 받나요</h2>
+      <p>고용노동부는 해고예고수당을 퇴직 후 14일 이내가 아니라 <strong>해고와 동시에</strong> 지급해야 한다고 안내해요(<a href="https://www.moel.go.kr/minwon/fastcounsel/fastcounselView.do?inetDcssMngId=202403151437489191000">고용노동부 상담 답변</a>, 근기 68207-1627). 따로 신청하지 않아도 회사가 줘야 하는 돈이에요.</p>
+      <p>받지 못했다면 <a href="https://labor.moel.go.kr/">고용노동부 노동포털</a>에서 온라인으로 진정을 내거나 사업장 주소지 관할 지방고용노동관서에 낼 수 있어요. 해고예고 규정을 어기면 2년 이하의 징역 또는 2천만원 이하의 벌금에 처할 수 있어요(근로기준법 제110조 제1호).</p>
+
+      <h2>자주 묻는 질문</h2>
+      <details open>
+        <summary>20일 전에 해고 통보를 받았으면 10일분만 받나요?</summary>
+        <p>아니요. 고용노동부는 예고 기간이 30일에서 일부라도 모자라면 30일 전에 예고하지 않은 것으로 보고, 30일분 이상의 통상임금을 줘야 한다고 해석해요(근기 68207-1346, 2003.10.20.). 모자란 날만큼이 아니라 30일분 전부예요.</p>
+      </details>
+      <details open>
+        <summary>알바도 해고예고수당을 받을 수 있나요?</summary>
+        <p>네. 근로자라면 알바, 단시간근로자, 계약직도 받아요. 주 15시간 미만이어도 해고예고 규정은 적용되고, 상시 5명 미만 사업장에도 적용돼요. 다만 계속 일한 기간이 3개월 미만이면 받을 수 없어요.</p>
+      </details>
+      <details open>
+        <summary>해고예고수당은 언제 받아야 하나요?</summary>
+        <p>고용노동부는 해고예고수당을 퇴직 후 14일 이내가 아니라 해고와 동시에 지급해야 한다고 안내해요. 따로 신청하지 않아도 회사가 줘야 하는 돈이에요.</p>
+      </details>
+      <details open>
+        <summary>말이나 문자로 해고를 알려도 예고가 되나요?</summary>
+        <p>해고예고는 방법이 정해져 있지 않아서 말로 해도 효력이 있다는 것이 고용노동부 해석이에요(근로개선정책과-5318). 다만 언제 해고되는지 날짜를 알 수 있게 해야 해요(대법원 2009도13833). 5명 이상 사업장은 이와 별도로 해고 사유와 시기를 서면으로 알려야 해고가 효력이 있어요(근로기준법 제27조).</p>
+      </details>
+      <details open>
+        <summary>1일 통상임금은 하루 근무시간으로 계산하나요?</summary>
+        <p>시급제 단시간근로자는 근로기준법 시행령 별표 2에 따라 4주 소정근로시간을 그 기간 통상 근로자의 소정근로일수로 나눈 시간을 1일 소정근로시간으로 봐요. 통상 근로자가 주 5일 일하면 주 소정근로시간 ÷ 5예요. 주 3일 하루 6시간(주 18시간)이면 6시간이 아니라 3.6시간이에요.</p>
+      </details>
+      </article>
+    </section>
+
+    <section class="related" aria-labelledby="related-title">
+      <h2 id="related-title">관련 글</h2>
+      <ul class="article-list">
+        <li>
+          <a class="card article-card" href="../dismissal-notice-guide/">
+            <h3>알바 해고예고수당과 30일 전 통보 규칙 (2027)</h3>
+            <p>30일 예고, 받을 수 없는 경우, 문자·카톡 해고, 5인 미만 사업장, 못 받았을 때 대응까지 사례로 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../unemployment-benefit-guide/">
+            <h3>알바 실업급여 조건과 계산법 (2027)</h3>
+            <p>해고나 계약 만료로 그만뒀다면 받을 수 있는 실업급여의 조건과 금액을 사례로 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../severance-pay-guide/">
+            <h3>알바 퇴직금 계산법 (2027)</h3>
+            <p>1년·주 15시간 조건, 평균임금과 통상임금 비교, 14일 지급 기한을 사례로 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../weekly-holiday-pay/">
+            <h3>2027 주휴수당 계산법</h3>
+            <p>주 15시간 조건과 개근 기준, 퇴사하는 주에 받는 법을 정리했어요.</p>
+          </a>
+        </li>
+      </ul>
+      <p class="related-more"><a href="../severance-pay/">퇴직금 계산기</a> · <a href="../unemployment-benefit/">실업급여 계산기</a> · <a href="../annual-leave-pay/">연차수당 계산기</a> · <a href="../articles/">아티클 전체 보기</a></p>
+    </section>
+
+    <footer class="footer">
+      <p>계산 결과는 참고용이며, 실제 해고예고수당은 근로계약, 통상임금에 들어가는 수당, 예외 사유 해당 여부 등에 따라 달라질 수 있어요. 법률 자문이 아니에요. 정확한 판단은 고용노동부 고객상담센터(국번 없이 1350)에 문의하세요.</p>
+      <p>기준: <a href="https://www.law.go.kr/법령/근로기준법/제26조">근로기준법 제26조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제27조">제27조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제110조">제110조</a>, <a href="https://www.law.go.kr/법령/근로기준법시행령/제6조">근로기준법 시행령 제6조</a>·<a href="https://www.law.go.kr/법령/근로기준법시행령/제7조">제7조(별표 1)</a>·<a href="https://www.law.go.kr/법령/근로기준법시행령/제9조">제9조(별표 2)</a>, <a href="https://www.law.go.kr/법령/근로기준법시행규칙/제4조">근로기준법 시행규칙 제4조(별표 1)</a>, <a href="https://www.law.go.kr/LSW/cgmExpcInfoP.do?cgmExpcDatSeq=14818&amp;mode=2&amp;ofiClsCd=350101">근기 68207-1346</a> · 마지막 업데이트 2026년 10월 18일</p>
+      <p><a href="../">알바 급여 계산기로 가기</a></p>
+      <nav class="footer-links" aria-label="사이트 정보">
+        <a href="/">홈</a>
+        <a href="/about.html">소개</a>
+        <a href="/about.html#contact">문의</a>
+        <a href="/privacy_policy.html"><strong>개인정보 처리방침</strong></a>
+      </nav>
+    </footer>
+  </main>
+</body>
+</html>
