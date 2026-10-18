@@ -127,7 +127,7 @@ export function calculateSeverance({
 }
 
 /** 같은 월·일로 n년 뒤. 없는 날짜(2월 29일)는 다음 날로 넘어간다. */
-function addYears(dayNumber, years) {
+export function addYears(dayNumber, years) {
   const date = new Date(dayNumber * DAY_MS);
   return Date.UTC(date.getUTCFullYear() + years, date.getUTCMonth(), date.getUTCDate()) / DAY_MS;
 }
@@ -136,7 +136,7 @@ function addYears(dayNumber, years) {
  * n개월 전 같은 날. 그 달에 같은 날이 없으면(5월 31일의 3개월 전 = 2월 31일)
  * 그다음 달 1일부터 센다. 그래서 퇴직일이 5월 31일이면 기간은 3월 1일~5월 30일이다.
  */
-function subtractMonths(dayNumber, months) {
+export function subtractMonths(dayNumber, months) {
   const date = new Date(dayNumber * DAY_MS);
   const year = date.getUTCFullYear();
   const month = date.getUTCMonth() - months;

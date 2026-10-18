@@ -1,9 +1,10 @@
-// test/pay_calculator_test.dart 와 같은 기준값으로 웹 계산 로직을 확인한다. 퇴직금(severance.js)은 웹에만 있다.
+// test/pay_calculator_test.dart 와 같은 기준값으로 웹 계산 로직을 확인한다. 퇴직금(severance.js)과 실업급여(unemployment.js)는 웹에만 있다.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { YEARS, autoDeduction, calculatePay, defaultYear, formatWon } from './calc.js';
 import { calculateSeverance, parseDate } from './severance.js';
+import { benefitDaysFor, calculateUnemployment, lowerLimitFor, upperLimitFor } from './unemployment.js';
 
 const fullTime = { hourlyWage: 10320, hoursPerDay: 8, daysPerWeek: 5 };
 
@@ -424,4 +425,219 @@ test('퇴직금 설명 글의 사례와 금액표', () => {
     assert.equal(result.severanceByAverage, byAverage);
   }
   assert.equal(severance({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 14 }).eligible, false);
+});
+
+const unemployment = (overrides) =>
+  calculateUnemployment({ weeklyHours: 20, workDays: 5, hourlyWage: 10700, ...overrides });
+
+test('실업급여: 피보험 단위기간 180일 경계', () => {
+  // 직접 입력: 179일이면 대상 아님, 180일이면 대상
+  const base = { startDate: '2027-01-01', lastWorkDate: '2027-12-31', unitMode: 'direct' };
+  const short = unemployment({ ...base, unitDays: 179 });
+  assert.equal(short.eligible, false);
+  assert.equal(short.unitsNeeded, 1);
+  assert.equal(unemployment({ ...base, unitDays: 180 }).eligible, true);
+
+  // 어림: 주 5일 + 주휴 1일 = 1주 6일. 210일 근무 → 180일
+  const sevenMonths = unemployment({ startDate: '2027-03-04', lastWorkDate: '2027-09-29' });
+  assert.equal(sevenMonths.unitDays, 180);
+  assert.equal(sevenMonths.eligible, true);
+  assert.equal(unemployment({ startDate: '2027-03-05', lastWorkDate: '2027-09-29' }).eligible, false);
+
+  // 18개월보다 오래 일해도 기준기간 안의 날만 센다
+  const long = unemployment({ startDate: '2020-01-01', lastWorkDate: '2027-12-31' });
+  assert.equal(long.basisStart, '2026-07-01');
+  assert.equal(long.unitDays, Math.floor((549 * 6) / 7));
+});
+
+test('실업급여: 주 15시간 미만·주 2일 이하는 기준기간 24개월', () => {
+  const weekend = unemployment({ startDate: '2027-01-04', lastWorkDate: '2027-12-31', weeklyHours: 14, workDays: 2 });
+  assert.equal(weekend.shortTime, true);
+  assert.equal(weekend.basisMonths, 24);
+  assert.equal(weekend.basisStart, '2026-01-01');
+  assert.equal(weekend.unitDays, 103); // 주휴 없음: 1주 2일
+  assert.equal(weekend.eligible, false);
+  assert.equal(weekend.unitsNeeded, 77);
+
+  // 주 3일 이상이면 18개월
+  assert.equal(unemployment({ startDate: '2027-01-04', lastWorkDate: '2027-12-31', weeklyHours: 14, workDays: 3 }).basisMonths, 18);
+});
+
+test('실업급여: 1일 구직급여액은 기초일액의 60%, 하한은 최저시급 × 시간 × 80%', () => {
+  // 2027년 하한: 1일 소정근로시간별
+  assert.deepEqual([8, 7, 6, 5, 4].map((hours) => lowerLimitFor('2027-06-30', hours)), [68480, 59920, 51360, 42800, 34240]);
+  // 4시간 이하는 4시간, 8시간 이상은 8시간
+  assert.equal(lowerLimitFor('2027-06-30', 2), 34240);
+  assert.equal(lowerLimitFor('2027-06-30', 10), 68480);
+  // 2026년 하한
+  assert.equal(lowerLimitFor('2026-06-30', 8), 66048);
+  assert.equal(lowerLimitFor('2026-06-30', 4), 33024);
+
+  // 시급이 높으면 60%가 하한보다 커서 60%
+  const high = unemployment({ startDate: '2026-01-01', lastWorkDate: '2027-06-30', weeklyHours: 30, hourlyWage: 15000 });
+  assert.equal(high.dailyHours, 6);
+  assert.equal(high.baseDaily, 90000); // 통상임금 15,000 × 6
+  assert.equal(high.byRate, 54000);
+  assert.equal(high.usesLower, false);
+  assert.equal(high.dailyBenefit, 54000);
+});
+
+test('실업급여: 상한 (2025년 66,000원, 2026년부터 68,100원)', () => {
+  assert.equal(upperLimitFor('2025-12-31'), 66000);
+  assert.equal(upperLimitFor('2026-01-01'), 68100);
+  assert.equal(upperLimitFor('2027-12-31'), 68100);
+
+  // 1일 6시간, 고임금: 기초일액 상한 113,500원 → 68,100원
+  const capped = unemployment({ startDate: '2020-01-01', lastWorkDate: '2027-06-30', weeklyHours: 30, hourlyWage: 30000 });
+  assert.equal(capped.capped, true);
+  assert.equal(capped.appliedBase, 113500);
+  assert.equal(capped.dailyBenefit, 68100);
+  assert.equal(capped.lowerLimit, 51360);
+  assert.equal(capped.inverted, false);
+
+  // 2025년 이직: 기초일액 상한 110,000원
+  const old = unemployment({ startDate: '2020-01-01', lastWorkDate: '2025-06-30', weeklyHours: 30, hourlyWage: 30000 });
+  assert.equal(old.appliedBase, 110000);
+  assert.equal(old.dailyBenefit, 66000);
+});
+
+test('실업급여: 2027년 1일 8시간이면 하한 68,480원이 상한 68,100원보다 높아 하한', () => {
+  const highWage = unemployment({ startDate: '2020-01-01', lastWorkDate: '2027-06-30', weeklyHours: 40, hourlyWage: 30000 });
+  assert.equal(highWage.capped, true);
+  assert.equal(highWage.byRate, 68100);
+  assert.equal(highWage.lowerLimit, 68480);
+  assert.equal(highWage.inverted, true);
+  assert.equal(highWage.usesLower, true);
+  assert.equal(highWage.dailyBenefit, 68480);
+
+  // 2026년 이직은 역전 없음 (하한 66,048원 < 상한 68,100원)
+  const y2026 = unemployment({ startDate: '2020-01-01', lastWorkDate: '2026-06-30', weeklyHours: 40, hourlyWage: 30000 });
+  assert.equal(y2026.inverted, false);
+  assert.equal(y2026.dailyBenefit, 68100);
+});
+
+test('실업급여: 이직 전 1일 소정근로시간 = (주 소정근로시간 + 주휴시간) ÷ 48 × 8', () => {
+  assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 40 }).dailyHours, 8);
+  assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 25 }).dailyHours, 5);
+  assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 15 }).dailyHours, 3);
+  // 주 15시간 미만은 주휴 없음: 12 ÷ 48 × 8 = 2시간, 하한은 4시간 기준
+  const short = unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 12 });
+  assert.equal(short.dailyHours, 2);
+  assert.equal(short.lowerHours, 4);
+});
+
+test('실업급여: 나이·가입기간별 소정급여일수 경계 (별표 1)', () => {
+  const cases = [
+    // [가입기간(년), 50세 미만, 50세 이상·장애인]
+    [0, 120, 120],
+    [0.99, 120, 120],
+    [1, 150, 180],
+    [2.99, 150, 180],
+    [3, 180, 210],
+    [4.99, 180, 210],
+    [5, 210, 240],
+    [9.99, 210, 240],
+    [10, 240, 270],
+    [30, 240, 270],
+  ];
+  for (const [years, under50, over50] of cases) {
+    assert.equal(benefitDaysFor(years, false), under50, `${years}년 50세 미만`);
+    assert.equal(benefitDaysFor(years, true), over50, `${years}년 50세 이상`);
+  }
+
+  // 입사일로 가입기간: 1년 딱 맞는 날(입사 1년 뒤 전날까지 근무)부터 1년 이상
+  assert.equal(unemployment({ startDate: '2026-03-02', lastWorkDate: '2027-02-28' }).benefitDays, 120);
+  assert.equal(unemployment({ startDate: '2026-03-02', lastWorkDate: '2027-03-01' }).benefitDays, 150);
+  assert.equal(unemployment({ startDate: '2026-03-02', lastWorkDate: '2027-03-01', over50: true }).benefitDays, 180);
+  // 직접 고른 가입기간이 입사일보다 우선
+  assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', insuredYears: 5 }).benefitDays, 210);
+});
+
+test('실업급여: 날짜가 없거나 계산 범위 밖이면 계산하지 않음', () => {
+  assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '' }).valid, false);
+  assert.equal(unemployment({ startDate: '', lastWorkDate: '2027-12-31' }).valid, false);
+  assert.equal(unemployment({ startDate: '2027-12-31', lastWorkDate: '2027-01-01' }).valid, false);
+  assert.equal(unemployment({ startDate: '2020-01-01', lastWorkDate: '2024-12-31' }).valid, false);
+  assert.equal(unemployment({ startDate: '2020-01-01', lastWorkDate: '2028-01-01' }).valid, false);
+  // 단위기간과 가입기간을 모두 직접 넣으면 입사일 없이도 계산
+  assert.equal(unemployment({ startDate: '', lastWorkDate: '2027-12-31', unitMode: 'direct', unitDays: 200, insuredYears: 1 }).valid, true);
+});
+
+// unemployment-benefit/index.html 의 예시가 계산기 결과와 같아야 한다.
+test('실업급여 계산기 페이지의 예시', () => {
+  const store = unemployment({ startDate: '2026-09-01', lastWorkDate: '2027-12-31' });
+  assert.equal(store.eligible, true);
+  assert.equal(store.unitDays, 417);
+  assert.equal(store.periodStart, '2027-10-01');
+  assert.equal(store.periodDays, 92);
+  assert.equal(store.threeMonthWages, 3375086);
+  assert.equal(store.dailyAverage, 36685.72);
+  assert.equal(store.baseDaily, 42800);
+  assert.equal(store.byRate, 25680);
+  assert.equal(store.lowerLimit, 34240);
+  assert.equal(store.dailyBenefit, 34240);
+  assert.equal(store.benefitDays, 150);
+  assert.equal(store.total, 5136000);
+
+  const monthly = calculatePay({ year: 2027, hourlyWage: 10700, hoursPerDay: 8, daysPerWeek: 5 }).monthly.gross;
+  assert.equal(monthly, 2236300);
+  const fullTime = unemployment({
+    startDate: '2024-03-01',
+    lastWorkDate: '2027-11-30',
+    weeklyHours: 40,
+    wageMode: 'direct',
+    threeMonthWages: monthly * 3,
+  });
+  assert.equal(fullTime.threeMonthWages, 6708900);
+  assert.equal(fullTime.periodStart, '2027-09-01');
+  assert.equal(fullTime.periodDays, 91);
+  assert.equal(fullTime.dailyAverage, 73724.18);
+  assert.equal(fullTime.baseDaily, 85600);
+  assert.equal(fullTime.byRate, 51360);
+  assert.equal(fullTime.dailyBenefit, 68480);
+  assert.equal(fullTime.insuredYears, 3);
+  assert.equal(fullTime.benefitDays, 180);
+  assert.equal(fullTime.total, 12326400);
+  assert.equal(fullTime.upperLimit, 68100);
+  assert.equal(fullTime.lowerLimit - fullTime.upperLimit, 380);
+});
+
+// unemployment-benefit-guide/index.html 의 사례와 하한 표가 계산기 결과와 같아야 한다.
+test('실업급여 설명 글의 사례와 하한 표', () => {
+  const cafe = unemployment({ startDate: '2026-03-02', lastWorkDate: '2027-08-31', weeklyHours: 25 });
+  assert.equal(cafe.eligible, true);
+  assert.equal(cafe.unitDays, 469);
+  assert.equal(cafe.periodStart, '2027-06-01');
+  assert.equal(cafe.periodDays, 92);
+  assert.equal(cafe.threeMonthWages, 4218857);
+  assert.equal(cafe.dailyAverage, 45857.15);
+  assert.equal(cafe.dailyOrdinary, 53500);
+  assert.equal(cafe.byRate, 32100);
+  assert.equal(cafe.dailyHours, 5);
+  assert.equal(cafe.lowerLimit, 42800);
+  assert.equal(cafe.dailyBenefit, 42800);
+  assert.equal(cafe.benefitDays, 150);
+  assert.equal(cafe.total, 6420000);
+
+  const weekend = unemployment({ startDate: '2027-01-04', lastWorkDate: '2027-12-31', weeklyHours: 14, workDays: 2 });
+  assert.equal(weekend.unitDays, 103);
+  assert.equal(weekend.unitsNeeded, 77);
+  assert.equal(weekend.lowerLimit, 34240);
+
+  // 하한 표: 주 소정근로시간 → 1일 소정근로시간 → 2027년 하한
+  const rows = [
+    [20, 4, 34240],
+    [25, 5, 42800],
+    [30, 6, 51360],
+    [35, 7, 59920],
+    [40, 8, 68480],
+  ];
+  for (const [weeklyHours, hours, lower] of rows) {
+    const result = unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours });
+    assert.equal(result.dailyHours, hours);
+    assert.equal(result.lowerLimit, lower);
+  }
+  assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 16 }).lowerLimit, 34240);
+  assert.equal(lowerLimitFor('2026-12-31', 8), 66048);
+  assert.equal(upperLimitFor('2027-12-31'), 68100);
 });

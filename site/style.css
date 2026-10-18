@@ -1070,3 +1070,12 @@ a.primary-button:focus-visible {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* 고용보험 가입기간처럼 글자가 긴 선택지: 한 줄에 3칸 */
+.chips-wide {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.chips-wide span {
+  padding: 8px 2px;
+}
