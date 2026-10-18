@@ -31,6 +31,8 @@
 
 실업급여 계산기(`site/unemployment-benefit/`)도 웹에만 있어요. 계산 로직은 `site/unemployment.js`(2025~2027년 이직 기준, 상한·최저시급은 `UNEMPLOYMENT_RULES`), 화면 동작은 `site/unemployment-benefit/unemployment-app.js`이고 테스트는 같은 `site/calc.test.js`에 있습니다.
 
+연차수당 계산기(`site/annual-leave-pay/`)도 웹에만 있어요. 계산 로직은 `site/annual-leave.js`(입사일 기준, 단시간근로자는 시행령 별표 2의 시간 단위), 화면 동작은 `site/annual-leave-pay/annual-leave-app.js`이고 테스트는 같은 `site/calc.test.js`에 있습니다.
+
 ## 실행
 
 ```bash

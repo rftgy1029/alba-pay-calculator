@@ -1,10 +1,11 @@
-// test/pay_calculator_test.dart 와 같은 기준값으로 웹 계산 로직을 확인한다. 퇴직금(severance.js)과 실업급여(unemployment.js)는 웹에만 있다.
+// test/pay_calculator_test.dart 와 같은 기준값으로 웹 계산 로직을 확인한다. 퇴직금(severance.js), 실업급여(unemployment.js), 연차수당(annual-leave.js)은 웹에만 있다.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { YEARS, autoDeduction, calculatePay, defaultYear, formatWon } from './calc.js';
 import { calculateSeverance, parseDate } from './severance.js';
 import { benefitDaysFor, calculateUnemployment, lowerLimitFor, upperLimitFor } from './unemployment.js';
+import { addMonths, annualDaysFor, calculateAnnualLeave, leaveHoursFor } from './annual-leave.js';
 
 const fullTime = { hourlyWage: 10320, hoursPerDay: 8, daysPerWeek: 5 };
 
@@ -640,4 +641,165 @@ test('실업급여 설명 글의 사례와 하한 표', () => {
   assert.equal(unemployment({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 16 }).lowerLimit, 34240);
   assert.equal(lowerLimitFor('2026-12-31', 8), 66048);
   assert.equal(upperLimitFor('2027-12-31'), 68100);
+});
+
+const annualLeave = (overrides) => calculateAnnualLeave({ weeklyHours: 20, hourlyWage: 10700, ...overrides });
+
+test('연차: 1년 미만은 1개월 근로를 마친 다음 날마다 1일, 최대 11일', () => {
+  // 1월 31일 입사: 2월 31일이 없어서 첫 1일은 3월 1일에 생긴다.
+  assert.equal(addMonths(parseDate('2026-01-31'), 1), parseDate('2026-03-01'));
+  assert.equal(annualLeave({ startDate: '2026-01-31', lastWorkDate: '2026-02-28' }).grants.length, 0);
+  assert.equal(annualLeave({ startDate: '2026-01-31', lastWorkDate: '2026-03-01' }).grants[0].days, 1);
+
+  const month = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-01-31' });
+  assert.equal(month.grants.length, 0);
+  assert.equal(month.next.date, '2027-02-01');
+  const sixMonths = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-07-01' });
+  assert.equal(sixMonths.grants[0].days, 6);
+  assert.equal(sixMonths.availableHours, 24);
+
+  // 개근 못 한 달은 빼고 센다.
+  assert.equal(annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', firstYearMissedMonths: 2 }).grants[0].days, 9);
+});
+
+test('연차: 딱 1년(365일)이면 11일, 366일째 근로관계가 있으면 15일 추가 (대법원 2021다227100)', () => {
+  const oneYear = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31' });
+  assert.equal(oneYear.exactlyOneYear, true);
+  assert.equal(oneYear.grants.length, 1);
+  assert.equal(oneYear.availableDays, 11);
+  assert.equal(oneYear.next.kind, 'annual');
+  assert.equal(oneYear.next.date, '2028-01-01');
+
+  const plusOne = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2028-01-01' });
+  assert.equal(plusOne.exactlyOneYear, false);
+  assert.equal(plusOne.grants.map((grant) => grant.days).join(), '11,15');
+  // 1년 미만 연차는 최초 1년이 끝나면 사용 기간이 지난다. 생긴 연차는 모두 26일.
+  assert.equal(plusOne.grants[0].active, false);
+  assert.equal(plusOne.grants.reduce((sum, grant) => sum + grant.days, 0), 26);
+  assert.equal(plusOne.availableDays, 15);
+
+  // 2년 근무(2주년 전날 퇴사)면 2년 근속 15일은 생기지 않는다 (대법원 2022다245419).
+  const twoYears = annualLeave({ startDate: '2018-01-01', lastWorkDate: '2019-12-31' });
+  assert.equal(twoYears.grants.length, 2);
+  assert.equal(twoYears.next.date, '2020-01-01');
+});
+
+test('연차: 15일에 3년부터 2년마다 1일 가산, 최대 25일', () => {
+  const days = [1, 2, 3, 4, 5, 6, 10, 11, 19, 20, 21, 22, 30].map(annualDaysFor);
+  assert.deepEqual(days, [15, 15, 16, 16, 17, 17, 19, 20, 24, 24, 25, 25, 25]);
+});
+
+test('연차: 단시간근로자는 시간 단위, 1시간 미만은 1시간 (시행령 별표 2)', () => {
+  assert.equal(leaveHoursFor(15, 20), 60);
+  assert.equal(leaveHoursFor(15, 15), 45);
+  assert.equal(leaveHoursFor(15, 40), 120);
+  assert.equal(leaveHoursFor(15, 52), 120);
+  assert.equal(leaveHoursFor(1, 22), 5); // 4.4시간 → 5시간
+  assert.equal(leaveHoursFor(16, 22.5), 72);
+  assert.equal(leaveHoursFor(1, 18), 4); // 3.6시간 → 4시간
+});
+
+test('연차: 주 15시간 미만, 5인 미만이면 대상 아님', () => {
+  const few = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 14.9 });
+  assert.equal(few.eligible, false);
+  assert.equal(few.pay, 0);
+  assert.equal(few.payIfEligible > 0, true);
+  const small = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', fiveOrMoreEmployees: false });
+  assert.equal(small.eligible, false);
+  assert.equal(small.pay, 0);
+});
+
+test('연차: 80% 미만인 해는 개근한 달 수만큼, 쓴 연차는 일·시간 모두 받음', () => {
+  const low = annualLeave({ startDate: '2024-03-04', lastWorkDate: '2026-08-31', lowAttendanceYears: { 2: 5 } });
+  assert.equal(low.grants[2].days, 5);
+  assert.equal(low.grants[2].hours, 20);
+  assert.equal(low.availableHours, 20);
+
+  const byDays = annualLeave({ startDate: '2026-03-02', lastWorkDate: '2027-08-31', usedLeave: 2.5, usedUnit: 'days' });
+  assert.equal(byDays.usedHours, 10);
+  assert.equal(byDays.remainingHours, 50);
+  const over = annualLeave({ startDate: '2026-03-02', lastWorkDate: '2027-08-31', usedLeave: 70 });
+  assert.equal(over.overUsed, true);
+  assert.equal(over.remainingHours, 0);
+  assert.equal(over.pay, 0);
+});
+
+test('연차: 날짜가 없거나 순서가 바뀌면 계산하지 않음', () => {
+  assert.equal(annualLeave({ startDate: '', lastWorkDate: '2027-12-31' }).valid, false);
+  assert.equal(annualLeave({ startDate: '2027-12-31', lastWorkDate: '2027-01-01' }).valid, false);
+});
+
+// annual-leave-pay/index.html 의 예시가 계산기 결과와 같아야 한다.
+test('연차수당 계산기 페이지의 예시', () => {
+  const store = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 15 });
+  assert.equal(store.grants[0].date, '2027-02-01');
+  assert.equal(store.grants[0].lastDate, '2027-12-01');
+  assert.equal(store.availableHours, 33);
+  assert.equal(store.pay, 353100);
+
+  const fullTime = annualLeave({ startDate: '2024-03-04', lastWorkDate: '2027-08-31', weeklyHours: 40, usedLeave: 6, usedUnit: 'days' });
+  assert.deepEqual(fullTime.grants.map((grant) => [grant.date, grant.days, grant.active]), [
+    ['2024-04-04', 11, false],
+    ['2025-03-04', 15, false],
+    ['2026-03-04', 15, false],
+    ['2027-03-04', 16, true],
+  ]);
+  assert.equal(fullTime.availableHours, 128);
+  assert.equal(fullTime.remainingHours, 80);
+  assert.equal(fullTime.pay, 856000);
+
+  // 근속연수별 일수 표
+  assert.deepEqual([1, 3, 5, 11, 21].map(annualDaysFor), [15, 16, 17, 20, 25]);
+});
+
+// annual-leave-guide/index.html 의 사례와 근무시간별 표가 계산기 결과와 같아야 한다.
+test('연차 설명 글의 사례와 금액표', () => {
+  const cafe = { startDate: '2026-03-02', weeklyHours: 20, hourlyWage: 10700 };
+  // 첫 1년: 2026.4.2.~2027.2.2. 11일 × 4시간, 2027.3.1.까지. 5일 쓰고 24시간 남음.
+  const firstYear = calculateAnnualLeave({ ...cafe, lastWorkDate: '2027-03-01', usedLeave: 5, usedUnit: 'days' });
+  assert.equal(firstYear.grants[0].date, '2026-04-02');
+  assert.equal(firstYear.grants[0].lastDate, '2027-02-02');
+  assert.equal(firstYear.grants[0].expires, '2027-03-01');
+  assert.equal(firstYear.availableHours, 44);
+  assert.equal(firstYear.remainingHours, 24);
+  assert.equal(firstYear.pay, 256800);
+  // 퇴사(2027.8.31.): 2027.3.2.에 생긴 60시간 중 4일(16시간) 사용 → 44시간
+  const leaving = calculateAnnualLeave({ ...cafe, lastWorkDate: '2027-08-31', usedLeave: 4, usedUnit: 'days' });
+  assert.equal(leaving.grants[1].date, '2027-03-02');
+  assert.equal(leaving.grants[1].expires, '2028-03-01');
+  assert.equal(leaving.availableHours, 60);
+  assert.equal(leaving.remainingHours, 44);
+  assert.equal(leaving.pay, 470800);
+  // 같은 사례의 퇴직금
+  const severanceResult = calculateSeverance({ ...cafe, lastWorkDate: '2027-08-31' });
+  assert.equal(severanceResult.dailyOrdinary, 42800);
+  assert.equal(severanceResult.severance, 1927759);
+
+  // 단시간 시간 계산 예시
+  assert.equal(leaveHoursFor(15, 20), 60);
+  assert.equal(leaveHoursFor(15, 15), 45);
+  assert.equal(leaveHoursFor(1, 22), 5);
+
+  // 근속연수별 표
+  assert.deepEqual([1, 2, 3, 4, 5, 6, 11, 12, 21].map(annualDaysFor), [15, 15, 16, 16, 17, 17, 20, 20, 25]);
+
+  const rows = [
+    // [주 소정근로시간, 연차 1일 시간, 첫 1년 시간, 금액, 1년 근속 15일 시간, 금액]
+    [15, 3, 33, 353100, 45, 481500],
+    [20, 4, 44, 470800, 60, 642000],
+    [25, 5, 55, 588500, 75, 802500],
+    [30, 6, 66, 706200, 90, 963000],
+    [35, 7, 77, 823900, 105, 1123500],
+    [40, 8, 88, 941600, 120, 1284000],
+  ];
+  for (const [weeklyHours, perDay, firstHours, firstPay, yearHours, yearPay] of rows) {
+    const oneYear = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours });
+    assert.equal(oneYear.hoursPerDay, perDay);
+    assert.equal(oneYear.availableHours, firstHours);
+    assert.equal(oneYear.pay, firstPay);
+    const afterYear = annualLeave({ startDate: '2027-01-01', lastWorkDate: '2028-01-01', weeklyHours });
+    assert.equal(afterYear.availableHours, yearHours);
+    assert.equal(afterYear.pay, yearPay);
+  }
+  assert.equal(annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 14 }).eligible, false);
 });

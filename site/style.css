@@ -671,6 +671,46 @@ legend {
   white-space: nowrap;
 }
 
+/* 연차 발생 표: 세 칸 모두 둘째 줄에 날짜·시간을 작게. 좁은 화면에서도 칸 안에서 줄을 바꾼다. */
+.leave-table td {
+  vertical-align: top;
+}
+
+.leave-table td:first-child {
+  overflow-wrap: break-word;
+}
+
+/* 일수·시간과 상태는 한 줄로 (첫 칸이 대신 줄을 바꾼다) */
+.leave-table td + td {
+  white-space: nowrap;
+}
+
+.leave-table th + th,
+.leave-table td + td {
+  padding-left: 8px;
+}
+
+.leave-table small {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+/* 아직 생기지 않은 다음 연차 줄은 흐리게 */
+.leave-table .upcoming td {
+  opacity: 0.7;
+}
+
+/* 입력칸과 단위 선택(시간/일)을 한 줄에 */
+.field-row-tight {
+  align-items: center;
+  gap: 8px;
+}
+
+.attendance-intro {
+  margin: 0 0 12px;
+}
+
 .block-title {
   margin: 16px 0 4px;
   font-size: 0.8rem;

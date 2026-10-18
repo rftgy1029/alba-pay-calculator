@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>연차수당 계산기 (알바·단시간) | 연차 발생일수·시간·미사용 연차수당</title>
+  <meta name="description" content="입사일, 마지막 근무일, 주 근무시간, 시급만 넣으면 알바 연차가 언제 몇 시간 생기는지와 퇴사 때 받을 미사용 연차수당을 계산해요. 1년 미만 월 1일, 15일, 가산 연차, 단시간근로자 시간 계산, 딱 1년 퇴사까지 단계별로 보여 줘요.">
+  <link rel="canonical" href="https://rftgy1029.github.io/alba-pay-calculator/annual-leave-pay/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rftgy1029.github.io/alba-pay-calculator/annual-leave-pay/">
+  <meta property="og:title" content="연차수당 계산기 - 알바도 주 15시간이면 연차가 생겨요">
+  <meta property="og:description" content="연도별로 생긴 연차와 남은 시간, 퇴사 때 받을 연차수당을 단계별로 계산해요.">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="생활 계산기 모음">
+  <meta name="theme-color" content="#f5f7f6">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <meta name="google-adsense-account" content="ca-pub-1951051252794060">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1951051252794060" crossorigin="anonymous"></script>
+  <script>
+    // 저장해 둔 테마를 화면이 그려지기 전에 적용해서 깜빡임을 막는다.
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <script type="module" src="../theme.js"></script>
+  <script type="module" src="../menu.js"></script>
+  <script type="module" src="annual-leave-app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "연차수당 계산기",
+    "url": "https://rftgy1029.github.io/alba-pay-calculator/annual-leave-pay/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko",
+    "description": "입사일, 마지막 근무일, 주 소정근로시간, 시급으로 연도별 연차 발생일수·시간과 퇴사 때 받을 미사용 연차수당을 계산하는 계산기",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "1년 계약이 끝나서 그만두면 연차수당은 며칠분인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "최대 11일분이에요. 1년 동안 매달 개근해서 생긴 11일만 있고, 1년 근속 15일은 1년 근로를 마친 다음 날에도 근로관계가 있어야 생겨요(대법원 2021. 10. 14. 선고 2021다227100 판결). 고용노동부도 2021년 12월 16일부터 같은 기준으로 행정해석을 바꿨어요. 하루라도 더 근로관계가 이어졌다면 15일이 더 생겨 최대 26일이 돼요." }
+      },
+      {
+        "@type": "Question",
+        "name": "연차수당은 어떤 금액으로 계산하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "근로기준법 제60조 제5항은 연차휴가 기간에 취업규칙 등에서 정하는 통상임금 또는 평균임금을 주라고 정해요. 시급제 알바는 보통 시급(통상임금)으로 계산해서, 남은 연차 시간 × 시급이 연차수당이에요. 계산기도 이 방식으로 계산해요." }
+      },
+      {
+        "@type": "Question",
+        "name": "연차를 다 못 쓰고 퇴사하면 언제 받나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "남은 연차는 돈으로 받아요. 회사는 퇴직한 날부터 14일 이내에 임금과 그 밖의 금품을 모두 지급해야 하고, 특별한 사정이 있으면 합의해서 미룰 수 있어요(근로기준법 제36조). 받지 못했다면 3년 안에 청구해야 해요(같은 법 제49조)." }
+      },
+      {
+        "@type": "Question",
+        "name": "회사가 1월 1일 기준으로 연차를 주면 계산이 달라지나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "회계연도 기준으로 연차를 주는 회사도 있어요. 이 계산기는 법에 정한 입사일 기준으로만 계산해요. 고용노동부는 퇴직할 때 회계연도 기준으로 준 연차가 입사일 기준보다 적으면 그 차이를 수당으로 정산해야 한다고 안내해요." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="topbar">
+        <button type="button" id="menu-open" class="icon-button" aria-label="메뉴 열기" aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></svg>
+        </button>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="화면 테마 바꾸기">
+          <span class="when-light">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+            라이트
+          </span>
+          <span class="when-dark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            다크
+          </span>
+        </button>
+      </div>
+      <h1>연차수당 계산기</h1>
+      <p class="lead">연차가 언제 몇 시간 생기는지와 퇴사 때 받을 연차수당을 계산 과정까지 단계별로 보여 줘요.</p>
+    </header>
+
+    <dialog id="site-menu" class="drawer" aria-label="메뉴">
+      <div class="drawer-body">
+        <div class="drawer-head">
+          <p class="drawer-title">생활 계산기 모음</p>
+          <button type="button" class="icon-button drawer-close" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <nav aria-label="사이트 메뉴">
+          <ul class="drawer-links">
+            <li><a href="/">홈</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-calculators">계산기</p>
+          <ul class="drawer-links" aria-labelledby="menu-calculators">
+            <li><a href="/alba-pay-calculator/">알바 급여 계산기</a></li>
+            <li><a href="/alba-pay-calculator/severance-pay/">퇴직금 계산기</a></li>
+            <li><a href="/alba-pay-calculator/unemployment-benefit/">실업급여 계산기</a></li>
+            <li><a href="/alba-pay-calculator/annual-leave-pay/" aria-current="page">연차수당 계산기</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-articles">글</p>
+          <ul class="drawer-links" aria-labelledby="menu-articles">
+            <li><a href="/alba-pay-calculator/articles/">아티클</a></li>
+          </ul>
+          <p class="drawer-section" id="menu-site">사이트 정보</p>
+          <ul class="drawer-links" aria-labelledby="menu-site">
+            <li><a href="/about.html">소개</a></li>
+            <li><a href="/about.html#contact">문의</a></li>
+            <li><a href="/privacy_policy.html">개인정보 처리방침</a></li>
+          </ul>
+        </nav>
+      </div>
+    </dialog>
+
+    <form id="calc" class="card" autocomplete="off">
+      <div class="field">
+        <label for="start">입사일</label>
+        <div class="input-row">
+          <input id="start" type="date" min="1990-01-01" max="2099-12-31" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="last">마지막 근무일 (또는 계산할 날)</label>
+        <div class="input-row">
+          <input id="last" type="date" min="1990-01-01" max="2099-12-31" required aria-describedby="last-hint">
+        </div>
+        <p class="hint" id="last-hint">근로계약이 끝나는 날이에요. 아직 다니고 있다면 계산하고 싶은 날을 넣어요.</p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="hours">주 소정근로시간</label>
+          <div class="input-row">
+            <input id="hours" inputmode="decimal" maxlength="4" enterkeyhint="done" aria-describedby="hours-hint">
+            <span class="unit">시간</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="wage">시급</label>
+          <div class="input-row">
+            <input id="wage" inputmode="numeric" maxlength="7" enterkeyhint="done">
+            <span class="unit">원</span>
+          </div>
+        </div>
+      </div>
+      <p class="hint field-hint" id="hours-hint">근로계약서에 정한 1주 근무시간(4주 평균)이에요. 하루 4시간 × 주 5일이면 20시간. <button type="button" id="min-wage" class="link-button">최저시급 넣기</button></p>
+
+      <fieldset class="field">
+        <legend>사업장 규모 (상시 근로자)</legend>
+        <div class="segmented" style="--count: 2">
+          <span class="segmented-thumb" aria-hidden="true"></span>
+          <label><input type="radio" name="size" value="5plus"><span>5인 이상</span></label>
+          <label><input type="radio" name="size" value="under5"><span>5인 미만</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>이미 쓴 연차 <small class="optional">(지금 쓸 수 있는 연차 중)</small></legend>
+        <div class="field-row field-row-tight">
+          <div class="input-row">
+            <input id="used" inputmode="decimal" maxlength="5" enterkeyhint="done" aria-label="이미 쓴 연차" aria-describedby="used-hint">
+            <span class="unit" id="used-unit">시간</span>
+          </div>
+          <div class="segmented" style="--count: 2">
+            <span class="segmented-thumb" aria-hidden="true"></span>
+            <label><input type="radio" name="used-unit" value="hours"><span>시간</span></label>
+            <label><input type="radio" name="used-unit" value="days"><span>일</span></label>
+          </div>
+        </div>
+        <p class="hint" id="used-hint"></p>
+      </fieldset>
+
+      <fieldset class="field field-last">
+        <legend>출근율 <small class="optional">(바꿀 때만)</small></legend>
+        <p class="hint attendance-intro">기본은 모든 달 개근, 매년 80% 이상 출근으로 계산해요.</p>
+        <div class="field">
+          <label for="missed">첫 1년 중 개근 못 한 달</label>
+          <div class="input-row">
+            <input id="missed" inputmode="numeric" maxlength="2" enterkeyhint="done" aria-describedby="missed-hint">
+            <span class="unit">개월</span>
+          </div>
+          <p class="hint" id="missed-hint">결근한 날이 있는 달이에요. 그 달에는 1일이 생기지 않아요.</p>
+        </div>
+        <div id="years"></div>
+      </fieldset>
+    </form>
+
+    <section class="card result" aria-live="polite">
+      <p class="result-label" id="result-label">퇴사 때 받을 연차수당 (세전)</p>
+      <p class="result-amount" id="result-amount">계산 중…</p>
+      <p class="result-sub" id="result-sub"></p>
+      <h2 class="block-title">연도별 발생 연차</h2>
+      <table class="breakdown leave-table">
+        <thead>
+          <tr><th scope="col">생긴 날</th><th scope="col">연차</th><th scope="col">상태</th></tr>
+        </thead>
+        <tbody id="grants-body"></tbody>
+      </table>
+      <h2 class="block-title">연차수당 계산</h2>
+      <table class="breakdown steps-table">
+        <tbody id="steps-body"></tbody>
+      </table>
+      <ul class="notes" id="notes"></ul>
+      <button type="button" id="share" class="primary-button">계산 결과 공유하기</button>
+      <p class="toast" id="toast" role="status" hidden></p>
+    </section>
+
+    <noscript>
+      <p class="card">계산기를 쓰려면 자바스크립트가 필요해요. 아래 계산 방법을 보고 직접 계산할 수도 있어요.</p>
+    </noscript>
+
+    <section class="help">
+      <article class="content">
+      <h2>연차휴가가 생기는 조건</h2>
+      <p>알바, 계약직, 단시간근로자도 아래 조건을 채우면 연차휴가가 생겨요. 쓰지 못한 연차는 퇴사할 때 돈(연차수당)으로 받아요.</p>
+      <ol>
+        <li><strong>주 15시간 이상</strong>: 4주 평균 1주 소정근로시간이 15시간 미만이면 연차휴가 규정이 적용되지 않아요(근로기준법 제18조 제3항).</li>
+        <li><strong>상시 5인 이상 사업장</strong>: 상시 4명 이하 사업장에는 연차휴가 조항(제60조)이 적용되지 않아요(근로기준법 시행령 별표 1). 퇴직금과 달라요.</li>
+        <li><strong>개근·출근율</strong>: 1년 미만일 때는 한 달 개근할 때마다 1일, 1년 이상이면 1년 동안 80% 이상 출근해야 15일이 생겨요(제60조 제1항·제2항).</li>
+      </ol>
+
+      <h2>연차는 언제 며칠 생기나요</h2>
+      <h3>입사 첫 1년: 매달 1일, 최대 11일</h3>
+      <p>한 달을 개근하면 그다음 날 1일이 생겨요. 3월 2일에 입사했다면 4월 2일, 5월 2일… 이렇게 11번, 최대 11일이에요(제60조 제2항). 이 연차는 입사 후 1년이 끝날 때까지 써야 해요(제60조 제7항).</p>
+      <h3>1년 근속 후: 15일, 3년부터 2년마다 1일 더</h3>
+      <p>1년 동안 80% 이상 출근하면 1년을 채운 다음 날 15일이 생겨요. 3년 이상 일하면 최초 1년을 넘는 근속 2년마다 1일씩 더해서, 3년째 16일, 5년째 17일… 최대 25일까지 늘어요(제60조 제1항·제4항). 생긴 날부터 1년 안에 써야 해요.</p>
+      <div class="table-scroll" role="region" aria-label="근속연수별 연차 일수 표" tabindex="0">
+        <table class="wage-table">
+          <thead>
+            <tr><th scope="col">근속</th><th scope="col">1년</th><th scope="col">3년</th><th scope="col">5년</th><th scope="col">11년</th><th scope="col">21년~</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>연차</td><td>15일</td><td>16일</td><td>17일</td><td>20일</td><td>25일</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>2년은 15일, 4년은 16일처럼 짝수 해는 앞 해와 같아요.</p>
+
+      <h3>딱 1년만 일하고 그만두면</h3>
+      <p>연차는 근로를 마친 <strong>다음 날</strong>에도 근로관계가 있어야 생겨요. 대법원은 1년 기간제 근로자에게는 최대 11일만 생기고, 15일은 1년 근로를 마친 다음 날에도 근로관계가 이어져야 생긴다고 판단했어요(<a href="https://www.law.go.kr/판례/(2021다227100)">대법원 2021. 10. 14. 선고 2021다227100 판결</a>). 고용노동부도 이 판결에 따라 2021년 12월 16일부터 행정해석을 바꿔 정규직에도 똑같이 적용해요(<a href="https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=13052">고용노동부 보도자료</a>).</p>
+      <ul>
+        <li>2027년 1월 1일 입사, 12월 31일까지 근무(365일) → 최대 11일</li>
+        <li>2027년 1월 1일 입사, 2028년 1월 1일까지 근무(366일) → 11일 + 15일 = 최대 26일</li>
+      </ul>
+      <p>1년을 넘겨 2년 이하로 일한 경우 최대 26일이 될 수 있다는 판결도 있어요(<a href="https://www.law.go.kr/판례/(2022다245419)">대법원 2022. 9. 7. 선고 2022다245419 판결</a>). 계산기는 마지막 근무일이 입사 1주년, 2주년… 날짜 이후인지로 연차가 생겼는지 판단해요.</p>
+
+      <h2>단시간 알바의 연차는 시간으로 계산해요</h2>
+      <p class="formula">연차 시간 = 통상 근로자 연차 일수 × (내 주 소정근로시간 ÷ 통상 근로자 주 소정근로시간) × 8시간</p>
+      <p>근로기준법 시행령 별표 2는 단시간근로자의 연차를 시간 단위로 주고, 1시간 미만은 1시간으로 보라고 정해요. 계산기는 통상 근로자를 주 40시간으로 봐요. 주 20시간이면 15일 × 20/40 × 8 = 60시간이고, 연차 1일은 4시간이에요.</p>
+
+      <h2>연차수당 계산 공식</h2>
+      <p class="formula">미사용 연차수당 = 남은 연차 시간 × 시급(통상임금)</p>
+      <p>연차휴가 기간에는 취업규칙 등에서 정한 통상임금 또는 평균임금을 줘요(제60조 제5항). 단시간근로자의 연차 임금은 시간급을 기준으로 해요(시행령 별표 2). 계산기는 시급으로 계산하고, 마지막 근무일에 아직 쓸 수 있는 연차만 퇴사 때 정산할 연차로 봐요.</p>
+
+      <h2>계산 예시</h2>
+      <h3>예시 1: 편의점 주 15시간, 딱 1년 계약</h3>
+      <p>2027년 1월 1일부터 12월 31일까지 1년 계약으로 하루 3시간, 주 5일 일했고 연차는 쓰지 않았어요. 시급은 2027년 최저시급 10,700원이에요.</p>
+      <ol class="steps">
+        <li>1년 미만 연차: 2월 1일 ~ 12월 1일에 1일씩 11일</li>
+        <li>연차 1일 = 15/40 × 8 = 3시간 → 11일 = 33시간</li>
+        <li>1년 근속 15일: 2028년 1월 1일에 근로관계가 없어서 생기지 않아요</li>
+        <li>연차수당: 33시간 × 10,700원 = <strong>353,100원</strong></li>
+      </ol>
+      <h3>예시 2: 주 40시간, 3년 6개월</h3>
+      <p>2024년 3월 4일에 입사해 2027년 8월 31일까지 주 40시간 일했고, 2027년 3월 4일에 생긴 연차 중 6일을 썼어요.</p>
+      <ol class="steps">
+        <li>2027년 3월 4일(3년 근속): 15일 + 1일 = 16일 = 128시간</li>
+        <li>쓴 연차: 6일 × 8시간 = 48시간 → 남은 연차 80시간(10일)</li>
+        <li>연차수당: 80시간 × 10,700원 = <strong>856,000원</strong></li>
+      </ol>
+      <p>그 전에 생긴 연차(첫해 11일, 1년·2년 근속 15일씩)는 이미 사용 기간이 끝나서 퇴사 때 정산할 연차에 넣지 않아요. 기간 안에 쓰지 못했다면 그때 수당으로 받았어야 하는 돈이에요.</p>
+
+      <h2>계산기에서 단순화한 부분</h2>
+      <ul>
+        <li><strong>입사일 기준</strong>: 회사가 1월 1일 같은 회계연도 기준으로 연차를 주는 경우는 계산하지 않아요. 고용노동부는 퇴직할 때 회계연도 기준 연차가 입사일 기준보다 적으면 차이를 수당으로 정산해야 한다고 안내해요(<a href="https://www.moel.go.kr/minwon/fastcounsel/fastcounselView.do?inetDcssMngId=202012170913033231000">고용노동부 상담 사례</a>).</li>
+        <li><strong>통상 근로자 주 40시간</strong>: 같은 일을 하는 통상 근로자의 소정근로시간이 40시간보다 짧은 사업장이면 연차 시간이 달라져요.</li>
+        <li><strong>1시간 미만 올림</strong>: 연차가 생길 때마다(한 달 1일, 1년 15일 등) 따로 시간으로 바꾸고 1시간 미만을 올려요.</li>
+        <li><strong>출근율</strong>: 몇 번 결근했는지가 아니라 '개근 못 한 달 수'와 '80% 미만인 해'만 받아요. 업무상 부상, 출산전후휴가, 육아휴직 기간 등은 출근한 것으로 봐요(제60조 제6항). 첫해 출근율이 80% 미만인 경우는 해석이 갈릴 수 있어 고용노동부 확인이 필요해요.</li>
+        <li><strong>사용 기간이 지난 연차</strong>: 퇴사 정산에 넣지 않아요. 회사 사정으로 쓰지 못했거나, 회사가 연차 사용 촉진(제61조)을 하지 않았다면 그 연차도 수당으로 받을 수 있어요.</li>
+        <li><strong>시급이 바뀐 경우</strong>: 입력한 시급 하나로 계산해요. 중간에 시급이 올랐다면 회사가 계산한 금액과 다를 수 있어요.</li>
+        <li><strong>세금</strong>: 세전 금액이에요.</li>
+      </ul>
+
+      <h2>연차 사용 촉진을 했다면</h2>
+      <p>회사가 법에 정한 순서대로 서면으로 사용을 독려하고(남은 일수 알림 → 근로자가 쓸 날짜를 정하지 않으면 회사가 날짜 지정) 그래도 쓰지 않아 사용 기간이 끝나 연차가 사라졌다면, 회사는 그 연차에 대해 수당을 줄 의무가 없어요(제61조). 1년 미만일 때 생긴 연차도 같은 제도가 있어요. 그러니 촉진 서면을 받았다면 날짜를 정해 쓰는 게 좋아요.</p>
+
+      <h2>자주 묻는 질문</h2>
+      <details open>
+        <summary>1년 계약이 끝나서 그만두면 연차수당은 며칠분인가요?</summary>
+        <p>최대 11일분이에요. 1년 동안 매달 개근해서 생긴 11일만 있고, 1년 근속 15일은 1년 근로를 마친 다음 날에도 근로관계가 있어야 생겨요(대법원 2021. 10. 14. 선고 2021다227100 판결). 고용노동부도 2021년 12월 16일부터 같은 기준으로 행정해석을 바꿨어요. 하루라도 더 근로관계가 이어졌다면 15일이 더 생겨 최대 26일이 돼요.</p>
+      </details>
+      <details open>
+        <summary>연차수당은 어떤 금액으로 계산하나요?</summary>
+        <p>근로기준법 제60조 제5항은 연차휴가 기간에 취업규칙 등에서 정하는 통상임금 또는 평균임금을 주라고 정해요. 시급제 알바는 보통 시급(통상임금)으로 계산해서, 남은 연차 시간 × 시급이 연차수당이에요. 계산기도 이 방식으로 계산해요.</p>
+      </details>
+      <details open>
+        <summary>연차를 다 못 쓰고 퇴사하면 언제 받나요?</summary>
+        <p>남은 연차는 돈으로 받아요. 회사는 퇴직한 날부터 14일 이내에 임금과 그 밖의 금품을 모두 지급해야 하고, 특별한 사정이 있으면 합의해서 미룰 수 있어요(근로기준법 제36조). 받지 못했다면 3년 안에 청구해야 해요(같은 법 제49조).</p>
+      </details>
+      <details open>
+        <summary>회사가 1월 1일 기준으로 연차를 주면 계산이 달라지나요?</summary>
+        <p>회계연도 기준으로 연차를 주는 회사도 있어요. 이 계산기는 법에 정한 입사일 기준으로만 계산해요. 고용노동부는 퇴직할 때 회계연도 기준으로 준 연차가 입사일 기준보다 적으면 그 차이를 수당으로 정산해야 한다고 안내해요.</p>
+      </details>
+      </article>
+    </section>
+
+    <section class="related" aria-labelledby="related-title">
+      <h2 id="related-title">관련 글</h2>
+      <ul class="article-list">
+        <li>
+          <a class="card article-card" href="../annual-leave-guide/">
+            <h3>알바 연차 발생 기준과 연차수당 계산법 (2027)</h3>
+            <p>주 15시간·5인 이상 조건, 1년만 일하고 그만둘 때, 단시간 시간 계산, 퇴사 정산과 사용 촉진까지 사례로 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../severance-pay-guide/">
+            <h3>알바 퇴직금 계산법 (2027)</h3>
+            <p>받는 조건, 평균임금과 통상임금, 상여금 3/12 가산, 못 받았을 때 진정과 3년 시효까지 사례로 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../unemployment-benefit-guide/">
+            <h3>알바 실업급여 조건과 계산법 (2027)</h3>
+            <p>180일 세는 법, 자발적 퇴사 예외, 2027년 상한·하한, 소정급여일수 표와 신청 절차를 사례로 정리했어요.</p>
+          </a>
+        </li>
+        <li>
+          <a class="card article-card" href="../weekly-holiday-pay/">
+            <h3>2027 주휴수당 계산법</h3>
+            <p>주 15시간 조건과 개근 기준, 근무시간별 주휴수당 금액표를 정리했어요.</p>
+          </a>
+        </li>
+      </ul>
+      <p class="related-more"><a href="../severance-pay/">퇴직금 계산기</a> · <a href="../unemployment-benefit/">실업급여 계산기</a> · <a href="../articles/">아티클 전체 보기</a></p>
+    </section>
+
+    <footer class="footer">
+      <p>계산 결과는 참고용이며, 실제 연차와 연차수당은 근로계약, 취업규칙, 출근 기록, 연차 사용 촉진 여부 등에 따라 달라질 수 있어요. 법률·세무 자문이 아니에요. 정확한 판단은 고용노동부 고객상담센터(국번 없이 1350)에 문의하세요.</p>
+      <p>기준: <a href="https://www.law.go.kr/법령/근로기준법/제60조">근로기준법 제60조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제61조">제61조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제18조">제18조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제36조">제36조</a>·<a href="https://www.law.go.kr/법령/근로기준법/제49조">제49조</a>, <a href="https://www.law.go.kr/법령/근로기준법시행령/제9조">근로기준법 시행령 제9조(별표 2)</a>·<a href="https://www.law.go.kr/법령/근로기준법시행령/제7조">제7조(별표 1)</a>, <a href="https://www.law.go.kr/판례/(2021다227100)">대법원 2021다227100</a>, <a href="https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=13052">고용노동부 연차유급휴가 행정해석 변경</a> · 마지막 업데이트 2026년 10월 18일</p>
+      <p><a href="../">알바 급여 계산기로 가기</a></p>
+      <nav class="footer-links" aria-label="사이트 정보">
+        <a href="/">홈</a>
+        <a href="/about.html">소개</a>
+        <a href="/about.html#contact">문의</a>
+        <a href="/privacy_policy.html"><strong>개인정보 처리방침</strong></a>
+      </nav>
+    </footer>
+  </main>
+</body>
+</html>
