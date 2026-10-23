@@ -954,3 +954,33 @@ test('연차 설명 글의 사례와 금액표', () => {
   }
   assert.equal(annualLeave({ startDate: '2027-01-01', lastWorkDate: '2027-12-31', weeklyHours: 14 }).eligible, false);
 });
+
+// unpaid-wages-guide/index.html 의 편의점 사례(마지막 달 월급 + 퇴직금, 지연이자, 간이대지급금)가 계산기 결과와 같아야 한다.
+test('임금체불 대처법 글의 사례', () => {
+  const monthly = calculatePay({ year: 2027, hourlyWage: 10700, hoursPerDay: 4, daysPerWeek: 5 }).monthly;
+  assert.equal(monthly.basePay, 87 * 10700);
+  assert.equal(monthly.weeklyHolidayPay, 17 * 10700);
+  assert.equal(monthly.gross, 1112800);
+
+  const store = calculateSeverance({ startDate: '2026-04-01', lastWorkDate: '2027-08-31', weeklyHours: 20, hourlyWage: 10700 });
+  assert.equal(store.eligible, true);
+  assert.equal(store.retireDate, '2027-09-01');
+  assert.equal(store.serviceDays, 518);
+  assert.equal(store.dailyAverage, 36685.72);
+  assert.equal(store.dailyOrdinary, 42800);
+  assert.equal(store.severance, 1822225);
+
+  const owed = monthly.gross + store.severance;
+  assert.equal(owed, 2935025);
+
+  // 지급 기한: 퇴직일(9월 1일)을 첫날로 세어 14일이 되는 날은 9월 14일. 지연이자는 그다음 날부터 지급일까지 (근로기준법 제37조).
+  assert.equal(formatDate(parseDate(store.retireDate) + 13), '2027-09-14');
+  const lateDays = parseDate('2027-10-31') - parseDate('2027-09-15') + 1;
+  assert.equal(lateDays, 47);
+  // 연 20% (시행령 제17조), 1년 365일, 원 단위 반올림
+  assert.equal(Math.round((owed * 0.2 * lateDays) / 365), 75587);
+
+  // 간이대지급금(퇴직자) 상한: 임금 700만원, 퇴직급여등 700만원, 합계 1,000만원 → 전액 대상
+  const paid = Math.min(Math.min(monthly.gross, 7000000) + Math.min(store.severance, 7000000), 10000000);
+  assert.equal(paid, owed);
+});
