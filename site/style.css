@@ -1119,3 +1119,20 @@ a.primary-button:focus-visible {
 .chips-wide span {
   padding: 8px 2px;
 }
+
+/* 글 안의 설명 그림 */
+.figure {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.figure svg { display: block; width: 100%; height: auto; }
+.figure figcaption { margin-top: 0.6rem; font-size: 0.9rem; color: var(--muted); }
+.figure .fg-text { fill: var(--text); font-size: 13px; }
+.figure .fg-muted { fill: var(--muted); font-size: 12px; }
+.figure .fg-accent { fill: var(--accent); }
+.figure .fg-soft { fill: var(--accent-soft); }
+.figure .fg-base { fill: var(--border); }
+.figure .fg-line { stroke: var(--control-border); stroke-width: 1; }
